@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CastMember {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  joinSeason  Int?
+  status      String   @default("Repertory")
+  createdAt   DateTime @default(now())
+
+  performances CastPerformance[]
+  sketchAppearances SketchAppearance[]
+
+  @@index([slug])
+  @@index([status])
+}
+
+model Season {
+  id          String   @id @default(cuid())
+  seasonNumber Int     @unique
+  yearStarted Int
+  yearEnded   Int
+  numEpisodes Int
+  createdAt   DateTime @default(now())
+
+  episodes    Episode[]
+
+  @@index([seasonNumber])
+}
+
+model Episode {
+  id            String   @id @default(cuid())
+  seasonId      String
+  episodeNumber Int
+  airDate       DateTime
+  host          String?
+  musicalGuest  String?
+  slug          String   @unique
+  createdAt     DateTime @default(now())
+
+  season        Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  performances  CastPerformance[]
+  sketches      Sketch[]
+  liveFromNewYork LiveFromNewYork? 
+
+  @@unique([seasonId, episodeNumber])
+  @@index([seasonId])
+  @@index([airDate])
+}
+
+model CastPerformance {
+  id                  String   @id @default(cuid())
+  episodeId           String
+  castMemberId        String
+  screenTimeSeconds   Int
+  sketchCount         Int
+  powerRanking        Decimal  @db.Decimal(5, 2)
+  createdAt           DateTime @default(now())
+
+  episode             Episode  @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+  castMember          CastMember @relation(fields: [castMemberId], references: [id], onDelete: Cascade)
+
+  @@unique([episodeId, castMemberId])
+  @@index([episodeId])
+  @@index([castMemberId])
+}
+
+model LiveFromNewYork {
+  id              String   @id @default(cuid())
+  episodeId       String   @unique
+  castMemberIds   String[] @default([])
+  createdAt       DateTime @default(now())
+
+  episode         Episode  @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+
+  @@index([episodeId])
+}
+
+model Sketch {
+  id              String   @id @default(cuid())
+  episodeId       String
+  title           String
+  sketchNumber    Int?
+  durationSeconds Int?
+  segmentType     String?
+  createdAt       DateTime @default(now())
+
+  episode         Episode  @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+  appearances     SketchAppearance[]
+
+  @@index([episodeId])
+}
+
+model SketchAppearance {
+  id              String   @id @default(cuid())
+  sketchId        String
+  castMemberId    String
+  role            String?
+  createdAt       DateTime @default(now())
+
+  sketch          Sketch   @relation(fields: [sketchId], references: [id], onDelete: Cascade)
+  castMember      CastMember @relation(fields: [castMemberId], references: [id], onDelete: Cascade)
+
+  @@unique([sketchId, castMemberId])
+  @@index([sketchId])
+  @@index([castMemberId])
+}
