@@ -1,0 +1,118 @@
+{
+  "season": 51,
+  "episode": 3,
+  "airDate": "2025-10-18",
+  "host": "Sabrina Carpenter",
+  "musicalGuest": "Sabrina Carpenter",
+  "liveFromNewYork": [
+    "Veronika Slowikowska",
+    "Sarah Sherman",
+    "Marcello Hernandez",
+    "Chloe Fineman",
+    "Ashley Padilla"
+  ],
+  "castPerformance": [
+    {
+      "name": "Colin Jost",
+      "screenTimeSeconds": 382,
+      "sketchCount": 1,
+      "powerRanking": 68.7
+    },
+    {
+      "name": "Marcello Hernandez",
+      "screenTimeSeconds": 322,
+      "sketchCount": 3,
+      "powerRanking": 76.5
+    },
+    {
+      "name": "Chloe Fineman",
+      "screenTimeSeconds": 458,
+      "sketchCount": 6,
+      "powerRanking": 116.2
+    },
+    {
+      "name": "Andrew Dismukes",
+      "screenTimeSeconds": 362,
+      "sketchCount": 5,
+      "powerRanking": 70.8
+    },
+    {
+      "name": "Sarah Sherman",
+      "screenTimeSeconds": 374,
+      "sketchCount": 4,
+      "powerRanking": 84.5
+    },
+    {
+      "name": "Michael Che",
+      "screenTimeSeconds": 187,
+      "sketchCount": 1,
+      "powerRanking": 39.7
+    },
+    {
+      "name": "Mikey Day",
+      "screenTimeSeconds": 320,
+      "sketchCount": 2,
+      "powerRanking": 69.8
+    },
+    {
+      "name": "James Austin Johnson",
+      "screenTimeSeconds": 148,
+      "sketchCount": 2,
+      "powerRanking": 37.8
+    },
+    {
+      "name": "Bowen Yang",
+      "screenTimeSeconds": 95,
+      "sketchCount": 1,
+      "powerRanking": 24.5
+    },
+    {
+      "name": "Kenan Thompson",
+      "screenTimeSeconds": 186,
+      "sketchCount": 3,
+      "powerRanking": 54.7
+    },
+    {
+      "name": "Ashley Padilla",
+      "screenTimeSeconds": 825,
+      "sketchCount": 6,
+      "powerRanking": 158.1
+    },
+    {
+      "name": "Kam Patterson",
+      "screenTimeSeconds": 64,
+      "sketchCount": 2,
+      "powerRanking": 17.0
+    },
+    {
+      "name": "Jeremy Culhane",
+      "screenTimeSeconds": 85,
+      "sketchCount": 4,
+      "powerRanking": 25.7
+    },
+    {
+      "name": "Veronika Slowikowska",
+      "screenTimeSeconds": 447,
+      "sketchCount": 5,
+      "powerRanking": 101.3
+    },
+    {
+      "name": "Tommy Brennan",
+      "screenTimeSeconds": 235,
+      "sketchCount": 3,
+      "powerRanking": 53.3
+    },
+    {
+      "name": "Ben Marshall",
+      "screenTimeSeconds": 226,
+      "sketchCount": 3,
+      "powerRanking": 48.4
+    },
+    {
+      "name": "Jane Wickline",
+      "screenTimeSeconds": 269,
+      "sketchCount": 3,
+      "powerRanking": 63.1
+    }
+  ]
+}

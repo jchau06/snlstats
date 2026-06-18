@@ -1,10 +1,8 @@
-import "dotenv/config"; // Add this as the VERY FIRST import, before everything
+// scripts/loadEpisodeData.ts
+import "dotenv/config";
 import fs from "fs";
 import path from "path";
 import { PrismaClient } from "@prisma/client";
-
-// Log to verify the env is loaded
-console.log("DATABASE_URL loaded:", !!process.env.DATABASE_URL);
 
 const prisma = new PrismaClient();
 
@@ -40,23 +38,20 @@ async function loadEpisodeData(filePath: string) {
       `Loading SNL S${data.season} E${data.episode}: ${data.host}...`,
     );
 
+    // Season upsert with hardcoded dates
     const seasonYears: Record<number, { start: number; end: number }> = {
       51: { start: 2025, end: 2026 },
       50: { start: 2024, end: 2025 },
       49: { start: 2023, end: 2024 },
     };
 
-    // Ensure season exists
     const season = await prisma.season.upsert({
       where: { seasonNumber: data.season },
       create: {
         seasonNumber: data.season,
-        yearStarted:
-          seasonYears[data.season]?.start ??
-          new Date(data.airDate).getFullYear(),
-        yearEnded:
-          seasonYears[data.season]?.end ?? new Date(data.airDate).getFullYear(),
-        numEpisodes: 20,
+        yearStarted: seasonYears[data.season]?.start ?? 2025,
+        yearEnded: seasonYears[data.season]?.end ?? 2026,
+        numEpisodes: 16,
       },
       update: {},
     });
@@ -92,9 +87,7 @@ async function loadEpisodeData(filePath: string) {
           joinSeason: data.season,
           status: "current",
         },
-        update: {
-          status: "current",
-        },
+        update: {},
       });
 
       // Upsert performance
@@ -121,30 +114,28 @@ async function loadEpisodeData(filePath: string) {
     }
 
     // Load LFNY data
-    if (data.liveFromNewYork && data.liveFromNewYork.length > 0) {
-      // Get IDs of cast members who said LFNY
-      const lfnyCastIds = await Promise.all(
-        data.liveFromNewYork.map(async (name) => {
-          const member = await prisma.castMember.findUnique({
-            where: { name },
-            select: { id: true },
-          });
-          return member?.id;
-        }),
-      );
+    // Load LFNY data - always create a record, even if empty
+    const lfnyCastIds = await Promise.all(
+      (data.liveFromNewYork || []).map(async (name) => {
+        const member = await prisma.castMember.findUnique({
+          where: { name },
+          select: { id: true },
+        });
+        return member?.id;
+      }),
+    );
 
-      // Upsert LFNY record
-      await prisma.liveFromNewYork.upsert({
-        where: { episodeId: episode.id },
-        create: {
-          episodeId: episode.id,
-          castMemberIds: lfnyCastIds.filter(Boolean) as string[],
-        },
-        update: {
-          castMemberIds: lfnyCastIds.filter(Boolean) as string[],
-        },
-      });
-    }
+    // Always upsert, even if empty array
+    await prisma.liveFromNewYork.upsert({
+      where: { episodeId: episode.id },
+      create: {
+        episodeId: episode.id,
+        castMemberIds: lfnyCastIds.filter(Boolean) as string[],
+      },
+      update: {
+        castMemberIds: lfnyCastIds.filter(Boolean) as string[],
+      },
+    });
 
     console.log(`✓ Loaded episode successfully`);
   } catch (error) {
@@ -155,21 +146,37 @@ async function loadEpisodeData(filePath: string) {
 
 async function main() {
   const episodesDir = path.join(process.cwd(), "public/data/episodes");
+  const args = process.argv.slice(2);
 
-  // Get all JSON files in the episodes directory
-  const files = fs
-    .readdirSync(episodesDir)
-    .filter((file) => file.endsWith(".json"))
-    .sort();
+  let files: string[];
 
-  console.log(`Found ${files.length} episode files to load\n`);
+  if (args.length > 0) {
+    files = args;
+    console.log(`Loading ${files.length} specified file(s)\n`);
+  } else {
+    files = fs
+      .readdirSync(episodesDir)
+      .filter((file) => file.endsWith(".json"))
+      .sort();
+    console.log(`Found ${files.length} episode files to load\n`);
+  }
 
   for (const file of files) {
-    const filePath = path.join(episodesDir, file);
+    // If it's an absolute path, use it directly. Otherwise, join with episodesDir
+    const filePath = path.isAbsolute(file)
+      ? file
+      : path.join(episodesDir, file);
+
+    // Verify file exists
+    if (!fs.existsSync(filePath)) {
+      console.error(`✗ File not found: ${file}`);
+      continue;
+    }
+
     await loadEpisodeData(filePath);
   }
 
-  console.log("\n✓ All episodes loaded successfully!");
+  console.log("\n✓ All specified episodes loaded successfully!");
   await prisma.$disconnect();
 }
 
