@@ -62,6 +62,7 @@ model CastPerformance {
   screenTimeSeconds   Int
   sketchCount         Int
   powerRanking        Decimal  @db.Decimal(5, 2)
+  status              String   @default("present")  // 'present', 'absent'
   createdAt           DateTime @default(now())
 
   episode             Episode  @relation(fields: [episodeId], references: [id], onDelete: Cascade)

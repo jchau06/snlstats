@@ -16,103 +16,120 @@
       "name": "Colin Jost",
       "screenTimeSeconds": 382,
       "sketchCount": 1,
-      "powerRanking": 68.7
+      "powerRanking": 68.7, 
+      "status": "present"
     },
     {
       "name": "Marcello Hernandez",
       "screenTimeSeconds": 322,
       "sketchCount": 3,
-      "powerRanking": 76.5
+      "powerRanking": 76.5,
+      "status": "present"
     },
     {
       "name": "Chloe Fineman",
       "screenTimeSeconds": 458,
       "sketchCount": 6,
-      "powerRanking": 116.2
+      "powerRanking": 116.2,
+      "status": "present"
     },
     {
       "name": "Andrew Dismukes",
       "screenTimeSeconds": 362,
       "sketchCount": 5,
-      "powerRanking": 70.8
+      "powerRanking": 70.8,
+      "status": "present"
     },
     {
       "name": "Sarah Sherman",
       "screenTimeSeconds": 374,
       "sketchCount": 4,
-      "powerRanking": 84.5
+      "powerRanking": 84.5,
+      "status": "present"
     },
     {
       "name": "Michael Che",
       "screenTimeSeconds": 187,
       "sketchCount": 1,
-      "powerRanking": 39.7
+      "powerRanking": 39.7,
+      "status": "present"
     },
     {
       "name": "Mikey Day",
       "screenTimeSeconds": 320,
       "sketchCount": 2,
-      "powerRanking": 69.8
+      "powerRanking": 69.8,
+      "status": "present"
     },
     {
       "name": "James Austin Johnson",
       "screenTimeSeconds": 148,
       "sketchCount": 2,
-      "powerRanking": 37.8
+      "powerRanking": 37.8,
+      "status": "present"
     },
     {
       "name": "Bowen Yang",
       "screenTimeSeconds": 95,
       "sketchCount": 1,
-      "powerRanking": 24.5
+      "powerRanking": 24.5,
+      "status": "present"
     },
     {
       "name": "Kenan Thompson",
       "screenTimeSeconds": 186,
       "sketchCount": 3,
-      "powerRanking": 54.7
+      "powerRanking": 54.7,
+      "status": "present"
     },
     {
       "name": "Ashley Padilla",
       "screenTimeSeconds": 825,
       "sketchCount": 6,
-      "powerRanking": 158.1
+      "powerRanking": 158.1,
+      "status": "present"
     },
     {
       "name": "Kam Patterson",
       "screenTimeSeconds": 64,
       "sketchCount": 2,
-      "powerRanking": 17.0
+      "powerRanking": 17.0,
+      "status": "present"
     },
     {
       "name": "Jeremy Culhane",
       "screenTimeSeconds": 85,
       "sketchCount": 4,
-      "powerRanking": 25.7
+      "powerRanking": 25.7,
+      "status": "present"
     },
     {
       "name": "Veronika Slowikowska",
       "screenTimeSeconds": 447,
       "sketchCount": 5,
-      "powerRanking": 101.3
+      "powerRanking": 101.3,
+      "status": "present"
     },
     {
       "name": "Tommy Brennan",
       "screenTimeSeconds": 235,
       "sketchCount": 3,
-      "powerRanking": 53.3
+      "powerRanking": 53.3,
+      "status": "present"
     },
     {
       "name": "Ben Marshall",
       "screenTimeSeconds": 226,
       "sketchCount": 3,
-      "powerRanking": 48.4
+      "powerRanking": 48.4,
+      "status": "present"
     },
     {
       "name": "Jane Wickline",
       "screenTimeSeconds": 269,
       "sketchCount": 3,
-      "powerRanking": 63.1
+      "powerRanking": 63.1,
+      "status": "present"
     }
   ]
 }

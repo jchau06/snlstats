@@ -18,6 +18,7 @@ interface EpisodeJSON {
     screenTimeSeconds: number;
     sketchCount: number;
     powerRanking: number;
+    status?: string;
   }>;
 }
 

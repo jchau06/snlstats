@@ -1,0 +1,129 @@
+{
+  "season": 51,
+  "episode": 8,
+  "airDate": "2025-12-13",
+  "host": "Josh O'Connor",
+  "musicalGuest": "Lily Allen",
+  "liveFromNewYork": ["James Austin Johnson", "Ashley Padilla"],
+  "castPerformance": [
+    {
+      "name": "Colin Jost",
+      "screenTimeSeconds": 334,
+      "sketchCount": 1,
+      "powerRanking": 60.2, 
+      "status": "present"
+    },
+    {
+      "name": "Marcello Hernandez",
+      "screenTimeSeconds": 241,
+      "sketchCount": 3,
+      "powerRanking": 64.8,
+      "status": "present"
+    },
+    {
+      "name": "Chloe Fineman",
+      "screenTimeSeconds": 371,
+      "sketchCount": 8,
+      "powerRanking": 109.5,
+      "status": "present"
+    },
+    {
+      "name": "Andrew Dismukes",
+      "screenTimeSeconds": 272,
+      "sketchCount": 4,
+      "powerRanking": 69.5,
+      "status": "present"
+    },
+    {
+      "name": "Sarah Sherman",
+      "screenTimeSeconds": 460,
+      "sketchCount": 5,
+      "powerRanking": 98.7,
+      "status": "present"
+    },
+    {
+      "name": "Michael Che",
+      "screenTimeSeconds": 162,
+      "sketchCount": 1,
+      "powerRanking": 34.8,
+      "status": "present"
+    },
+    {
+      "name": "Mikey Day",
+      "screenTimeSeconds": 119,
+      "sketchCount": 5,
+      "powerRanking": 39.8,
+      "status": "present"
+    },
+    {
+      "name": "James Austin Johnson",
+      "screenTimeSeconds": 329,
+      "sketchCount": 4,
+      "powerRanking": 86.2,
+      "status": "present"
+    },
+    {
+      "name": "Bowen Yang",
+      "screenTimeSeconds": 639,
+      "sketchCount": 5,
+      "powerRanking": 124.8,
+      "status": "present"
+    },
+    {
+      "name": "Kenan Thompson",
+      "screenTimeSeconds": 346,
+      "sketchCount": 4,
+      "powerRanking": 77.3,
+      "status": "present"
+    },
+    {
+      "name": "Ashley Padilla",
+      "screenTimeSeconds": 501,
+      "sketchCount": 8,
+      "powerRanking": 146.6,
+      "status": "present"
+    },
+    {
+      "name": "Kam Patterson",
+      "screenTimeSeconds": 5,
+      "sketchCount": 1,
+      "powerRanking": 4.1,
+      "status": "present"
+    },
+    {
+      "name": "Jeremy Culhane",
+      "screenTimeSeconds": 21,
+      "sketchCount": 1,
+      "powerRanking": 10.3,
+      "status": "present"
+    },
+    {
+      "name": "Veronika Slowikowska",
+      "screenTimeSeconds": 325,
+      "sketchCount": 5,
+      "powerRanking": 83.7,
+      "status": "present"
+    },
+    {
+      "name": "Tommy Brennan",
+      "screenTimeSeconds": 16,
+      "sketchCount": 1,
+      "powerRanking": 9.3,
+      "status": "present"
+    },
+    {
+      "name": "Ben Marshall",
+      "screenTimeSeconds": 188,
+      "sketchCount": 3,
+      "powerRanking": 54.6,
+      "status": "present"
+    },
+    {
+      "name": "Jane Wickline",
+      "screenTimeSeconds": 362,
+      "sketchCount": 3,
+      "powerRanking": 88.7,
+      "status": "present"
+    }
+  ]
+}
