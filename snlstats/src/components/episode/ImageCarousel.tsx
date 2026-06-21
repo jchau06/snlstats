@@ -82,7 +82,7 @@ export function ImageCarousel({
   }
 
   return (
-    <div className={`relative w-full group ${className}`}>
+    <div className={`relative w-full h-96 md:h-[500px] overflow-hidden group ${className}`}>
       {/* Carousel Container */}
       <div
         ref={scrollContainerRef}
@@ -101,12 +101,13 @@ export function ImageCarousel({
           {images.map((imageUrl, index) => (
             <div
               key={index}
-              className="min-w-full h-96 md:h-[500px] snap-center relative overflow-hidden"
+              className="min-w-full h-96 md:h-[500px] snap-center relative overflow-hidden flex-shrink-0"
             >
               {/* Image */}
               <Image
                 src={imageUrl}
                 alt={`${alt} ${index + 1}`}
+                fill
                 className="w-full h-full object-cover"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src =
