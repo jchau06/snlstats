@@ -87,8 +87,11 @@ async function loadEpisodeData(filePath: string) {
           slug: slugify(perf.name),
           joinSeason: data.season,
           status: "current",
+          headshot: `https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/cast/${slugify(perf.name)}.jpg`,
         },
-        update: {},
+        update: {
+          status: "current",
+        },
       });
 
       // Upsert performance

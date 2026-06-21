@@ -1,0 +1,340 @@
+/* src/styles/globals.css */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap');
+
+/* Custom font faces for SNL-specific fonts */
+/* 
+  Note: Acme Gothic, Budmo Jiggler, and Gotham Bold need to be self-hosted.
+  Download from onlinewebfonts.com and place in public/fonts/ directory.
+  Or use these alternatives:
+  - Acme Gothic → Google Fonts: Space Mono Bold (similar geometric feel)
+  - Budmo Jiggler → Google Fonts: Righteous (fun, playful)
+  - Gotham Bold → Google Fonts: Cardo Bold (professional)
+*/
+
+@font-face {
+  font-family: 'Acme Gothic';
+  src: url('/fonts/acme-gothic.woff2') format('woff2'),
+       url('/fonts/acme-gothic.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Budmo Jiggler';
+  src: url('/fonts/budmo-jiggler.woff2') format('woff2'),
+       url('/fonts/budmo-jiggler.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gotham Bold';
+  src: url('/fonts/gotham-bold.woff2') format('woff2'),
+       url('/fonts/gotham-bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #0A0A0A;
+  color: #FFFFFF;
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings */
+h1 {
+  font-family: 'Acme Gothic', sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #FFFFFF;
+}
+
+h2 {
+  font-family: 'Acme Gothic', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #FFFFFF;
+}
+
+h3 {
+  font-family: 'Gotham Bold', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #FFFFFF;
+}
+
+h4 {
+  font-family: 'Gotham Bold', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #FFFFFF;
+}
+
+h5 {
+  font-family: 'Gotham Bold', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #FFFFFF;
+}
+
+/* Paragraphs and text */
+p {
+  margin-bottom: 1rem;
+  color: #FFFFFF;
+}
+
+a {
+  color: #FFD200;
+  text-decoration: none;
+  transition: color 250ms ease-in-out;
+}
+
+a:hover {
+  color: #FFFFFF;
+  text-decoration: underline;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: #B4B2A9;
+  text-align: left;
+  padding: 12px 0;
+  border-bottom: 1px solid #2C2C2A;
+}
+
+td {
+  padding: 12px 0;
+  border-bottom: 1px solid #2C2C2A;
+  color: #FFFFFF;
+}
+
+/* Statistical labels and numbers */
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: #B4B2A9;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  font-weight: 600;
+  color: #FFD200;
+}
+
+.stat-value-sm {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  font-weight: 600;
+  color: #FFD200;
+}
+
+/* Data accent text (highlighted numbers/stats) */
+.accent-text {
+  font-family: 'Budmo Jiggler', sans-serif;
+  color: #FFD200;
+  font-weight: 700;
+}
+
+/* Buttons */
+button, .button {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: 0.5px solid #FFD200;
+  background-color: transparent;
+  color: #FFD200;
+  cursor: pointer;
+  transition: all 250ms ease-in-out;
+}
+
+button:hover, .button:hover {
+  background-color: #FFD200;
+  color: #0A0A0A;
+}
+
+button:active, .button:active {
+  transform: scale(0.98);
+}
+
+button.primary, .button.primary {
+  background-color: #FFD200;
+  color: #0A0A0A;
+  border-color: #FFD200;
+}
+
+button.primary:hover, .button.primary:hover {
+  background-color: #FFFFFF;
+  border-color: #FFFFFF;
+}
+
+/* Cards and containers */
+.card {
+  background-color: #222222;
+  border: 0.5px solid #2C2C2A;
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 250ms ease-in-out;
+}
+
+.card:hover {
+  border-color: #FFD200;
+  box-shadow: 0 0 24px rgba(255, 210, 0, 0.15);
+}
+
+.glass-effect {
+  background-color: rgba(34, 34, 34, 0.8);
+  backdrop-filter: blur(10px);
+  border: 0.5px solid rgba(255, 210, 0, 0.1);
+}
+
+/* Badges and tags */
+.badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background-color: #2C2C2A;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge.primary {
+  background-color: #FFD200;
+  color: #0A0A0A;
+}
+
+.badge.success {
+  background-color: #1D9E75;
+  color: #FFFFFF;
+}
+
+.badge.warning {
+  background-color: #BA7517;
+  color: #FFFFFF;
+}
+
+.badge.danger {
+  background-color: #E24B4A;
+  color: #FFFFFF;
+}
+
+/* Images with overlay */
+.image-overlay {
+  position: relative;
+}
+
+.image-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.image-overlay img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Breadcrumbs */
+.breadcrumb {
+  display: flex;
+  gap: 8px;
+  font-size: 14px;
+  color: #B4B2A9;
+  margin-bottom: 24px;
+}
+
+.breadcrumb a {
+  color: #FFD200;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb span {
+  color: #B4B2A9;
+}
+
+/* Dividers */
+hr {
+  border: none;
+  border-top: 0.5px solid #2C2C2A;
+  margin: 32px 0;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #0A0A0A;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #2C2C2A;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #5F5E5A;
+}
+
+/* Selection styling */
+::selection {
+  background-color: #FFD200;
+  color: #0A0A0A;
+}
+
+::-moz-selection {
+  background-color: #FFD200;
+  color: #0A0A0A;
+}

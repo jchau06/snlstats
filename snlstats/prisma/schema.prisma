@@ -13,6 +13,7 @@ model CastMember {
   slug        String   @unique
   joinSeason  Int?
   status      String   @default("Repertory")
+  headshot    String?
   createdAt   DateTime @default(now())
 
   performances CastPerformance[]
@@ -43,6 +44,7 @@ model Episode {
   host          String?
   musicalGuest  String?
   slug          String   @unique
+  imageUrls     String[] @default([])
   createdAt     DateTime @default(now())
 
   season        Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
