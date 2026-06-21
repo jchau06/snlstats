@@ -2,6 +2,7 @@
 import { prisma } from "@/src/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { Badge } from "@/src/components/ui";
 
 interface Props {
   params: Promise<{
@@ -96,6 +97,7 @@ export default async function EpisodePage({ params }: Props) {
         <h1 style={{ marginBottom: "0.5rem", fontSize: "28px" }}>
           SNL S{seasonNum} E{episode.episodeNumber}
         </h1>
+        <Badge label="Present" variant="success" size="md" />
         <p
           style={{ color: "var(--color-text-secondary)", marginBottom: "1rem" }}
         >
