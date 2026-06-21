@@ -1,8 +1,8 @@
 // src/components/episode/ImageCarousel.tsx
-'use client';
+"use client";
 
-import React, { useRef, useState, useEffect } from 'react';
-import Image from 'next/image'
+import React, { useRef, useState, useEffect } from "react";
+import Image from "next/image";
 
 interface ImageCarouselProps {
   images: string[];
@@ -12,8 +12,8 @@ interface ImageCarouselProps {
 
 export function ImageCarousel({
   images,
-  alt = 'Episode carousel',
-  className = '',
+  alt = "Episode carousel",
+  className = "",
 }: ImageCarouselProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -38,25 +38,25 @@ export function ImageCarousel({
     checkScroll();
     const container = scrollContainerRef.current;
     if (container) {
-      container.addEventListener('scroll', checkScroll);
-      window.addEventListener('resize', checkScroll);
+      container.addEventListener("scroll", checkScroll);
+      window.addEventListener("resize", checkScroll);
       return () => {
-        container.removeEventListener('scroll', checkScroll);
-        window.removeEventListener('resize', checkScroll);
+        container.removeEventListener("scroll", checkScroll);
+        window.removeEventListener("resize", checkScroll);
       };
     }
   }, []);
 
-  const scroll = (direction: 'left' | 'right') => {
+  const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
       const scrollAmount = scrollContainerRef.current.clientWidth;
       const targetScroll =
         scrollContainerRef.current.scrollLeft +
-        (direction === 'left' ? -scrollAmount : scrollAmount);
+        (direction === "left" ? -scrollAmount : scrollAmount);
 
       scrollContainerRef.current.scrollTo({
         left: targetScroll,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
     }
   };
@@ -66,7 +66,7 @@ export function ImageCarousel({
       const scrollAmount = scrollContainerRef.current.clientWidth * index;
       scrollContainerRef.current.scrollTo({
         left: scrollAmount,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
     }
   };
@@ -74,7 +74,7 @@ export function ImageCarousel({
   if (!images || images.length === 0) {
     return (
       <div
-        className={`relative w-full h-96 bg-gradient-to-b from-[#0A0A0A] to-[#222222] rounded-lg flex items-center justify-center ${className}`}
+        className={`relative w-full h-full bg-gradient-to-b from-[#0A0A0A] to-[#222222] rounded-lg flex items-center justify-center ${className}`}
       >
         <p className="text-[#B4B2A9] font-sans">No images available</p>
       </div>
@@ -82,44 +82,38 @@ export function ImageCarousel({
   }
 
   return (
-    <div className={`relative w-full h-96 md:h-[500px] overflow-hidden group ${className}`}>
-      {/* Carousel Container */}
+    <div
+      className={`relative w-full h-full overflow-hidden group ${className}`}
+    >
       <div
         ref={scrollContainerRef}
-        className="w-full h-96 md:h-[500px] overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        className="absolute inset-0 overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory scrollbar-hide"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        {/* Hide scrollbar for webkit browsers */}
         <style>{`
-          .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-          }
-        `}</style>
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
 
-        {/* Images */}
-        <div className="flex gap-0">
+        {/* Images — give the flex row an explicit height */}
+        <div className="flex flex-row flex-nowrap h-full gap-0">
           {images.map((imageUrl, index) => (
             <div
               key={index}
-              className="min-w-full h-96 md:h-[500px] snap-center relative overflow-hidden flex-shrink-0"
+              className="min-w-full h-full snap-center relative overflow-hidden flex-shrink-0"
+              style={{ position: "relative" }}
             >
-              {/* Image */}
               <Image
                 src={imageUrl}
                 alt={`${alt} ${index + 1}`}
                 fill
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src =
-                    'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500"%3E%3Crect fill="%23222222" width="1200" height="500"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23B4B2A9" font-size="24" font-family="monospace"%3EImage not found%3C/text%3E%3C/svg%3E';
-                }}
+                className="object-cover"
+                sizes="100vw"
+                priority={index === 0}
               />
-
-              {/* Dark Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-              {/* Slide Counter */}
-              <div className="absolute bottom-4 left-4 bg-primary px-3 py-1 rounded-full text-neutral font-mono font-bold text-sm">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
+              <div className="absolute bottom-4 left-4 bg-primary px-3 py-1 rounded-full text-neutral font-mono font-bold text-sm z-20">
                 {index + 1} / {images.length}
               </div>
             </div>
@@ -130,7 +124,7 @@ export function ImageCarousel({
       {/* Left Arrow Button */}
       {canScrollLeft && (
         <button
-          onClick={() => scroll('left')}
+          onClick={() => scroll("left")}
           className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-primary hover:text-neutral text-primary p-3 rounded-full transition-all duration-base backdrop-blur-sm"
           aria-label="Previous image"
         >
@@ -153,7 +147,7 @@ export function ImageCarousel({
       {/* Right Arrow Button */}
       {canScrollRight && (
         <button
-          onClick={() => scroll('right')}
+          onClick={() => scroll("right")}
           className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-primary hover:text-neutral text-primary p-3 rounded-full transition-all duration-base backdrop-blur-sm"
           aria-label="Next image"
         >
@@ -182,8 +176,8 @@ export function ImageCarousel({
               onClick={() => goToSlide(index)}
               className={`rounded-full transition-all duration-base ${
                 index === currentSlide
-                  ? 'bg-primary w-3 h-3'
-                  : 'bg-white/30 hover:bg-white/60 w-2 h-2'
+                  ? "bg-primary w-3 h-3"
+                  : "bg-white/30 hover:bg-white/60 w-2 h-2"
               }`}
               aria-label={`Go to image ${index + 1}`}
             />

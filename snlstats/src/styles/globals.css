@@ -1,6 +1,7 @@
-/* src/styles/globals.css */
+/* src/components/styles/globals.css */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap');
-
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
 /* Custom font faces for SNL-specific fonts */
 /* 
   Note: Acme Gothic, Budmo Jiggler, and Gotham Bold need to be self-hosted.
