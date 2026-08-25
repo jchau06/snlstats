@@ -29,8 +29,8 @@ export function HeroSection({
   airDate,
   host,
   musicalGuest,
-  liveFromNewYorkCast,
-  backgroundImage,
+  // liveFromNewYorkCast,
+  // backgroundImage,
   className = "",
 }: HeroSectionProps) {
   const formattedDate = airDate.toLocaleDateString("en-US", {
@@ -38,11 +38,6 @@ export function HeroSection({
     day: "2-digit",
     year: "numeric",
   });
-
-  const lfnyNames =
-    liveFromNewYorkCast.length > 0
-      ? liveFromNewYorkCast.map((c) => c.name).join(", ")
-      : null;
 
   return (
     <div
@@ -52,19 +47,19 @@ export function HeroSection({
       <ImageCarousel
         images={images}
         alt={`SNL S${season}E${episode}`}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full"
       />
 
       {/* Dark Gradient Overlay - Ensures text readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10 pointer-events-none" />
 
       {/* Content Container - Flexbox for proper bottom alignment */}
-      <div className="absolute inset-0 z-20 flex flex-col justify-end px-8 pb-8 md:px-12 md:pb-12">
+      <div className="absolute inset-0 z-20 flex flex-col justify-end px-8 pb-8 md:px-12 md:pb-12 pointer-events-none">
         <div className="flex flex-col md:flex-row justify-between items-end gap-8">
           {/* Left Column */}
-          <div className="max-w-2xl">
-            <div className="mb-6 inline-block">
-              <span className="text-white font-mono font-bold text-xs px-3 py-1 rounded-full">
+          <div className="max-w-2.5xl">
+            <div className="mb-3 inline-block">
+              <span className="text-white font-mono font-bold text-xs  rounded-full">
                 AIRED: {formattedDate}
               </span>
             </div>
@@ -89,21 +84,6 @@ export function HeroSection({
               </div>
             </div>
           </div>
-
-          {/* Right Column */}
-          {lfnyNames && (
-            <div className="w-full md:w-auto pb-4">
-              <div className="border border-primary rounded-lg px-6 py-5 backdrop-blur-sm bg-black/30">
-                <p className="stat-label text-xs mb-3 uppercase">
-                  LIVE FROM NEW YORK
-                </p>
-
-                <p className="font-sans font-bold text-tertiary text-base md:text-lg leading-relaxed">
-                  {lfnyNames}
-                </p>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

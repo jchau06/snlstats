@@ -85,6 +85,7 @@ export function ImageCarousel({
     <div
       className={`relative w-full h-full overflow-hidden group ${className}`}
     >
+      {/* Scroll Container */}
       <div
         ref={scrollContainerRef}
         className="absolute inset-0 overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory scrollbar-hide"
@@ -96,7 +97,7 @@ export function ImageCarousel({
         }
       `}</style>
 
-        {/* Images — give the flex row an explicit height */}
+        {/* Images */}
         <div className="flex flex-row flex-nowrap h-full gap-0">
           {images.map((imageUrl, index) => (
             <div
@@ -113,9 +114,6 @@ export function ImageCarousel({
                 priority={index === 0}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
-              <div className="absolute bottom-4 left-4 bg-primary px-3 py-1 rounded-full text-neutral font-mono font-bold text-sm z-20">
-                {index + 1} / {images.length}
-              </div>
             </div>
           ))}
         </div>
@@ -125,7 +123,7 @@ export function ImageCarousel({
       {canScrollLeft && (
         <button
           onClick={() => scroll("left")}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-primary hover:text-neutral text-primary p-3 rounded-full transition-all duration-base backdrop-blur-sm"
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 pointer-events-auto bg-black/50 hover:bg-primary hover:text-neutral text-primary p-3 rounded-full transition-all duration-base backdrop-blur-sm"
           aria-label="Previous image"
         >
           <svg
@@ -148,7 +146,7 @@ export function ImageCarousel({
       {canScrollRight && (
         <button
           onClick={() => scroll("right")}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-primary hover:text-neutral text-primary p-3 rounded-full transition-all duration-base backdrop-blur-sm"
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 pointer-events-auto bg-black/50 hover:bg-primary hover:text-neutral text-primary p-3 rounded-full transition-all duration-base backdrop-blur-sm"
           aria-label="Next image"
         >
           <svg
@@ -167,21 +165,29 @@ export function ImageCarousel({
         </button>
       )}
 
-      {/* Dot Indicators */}
+      {/* Bottom Right Controls */}
       {images.length > 1 && (
-        <div className="absolute bottom-4 right-4 flex gap-2 z-10">
-          {images.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`rounded-full transition-all duration-base ${
-                index === currentSlide
-                  ? "bg-primary w-3 h-3"
-                  : "bg-white/30 hover:bg-white/60 w-2 h-2"
-              }`}
-              aria-label={`Go to image ${index + 1}`}
-            />
-          ))}
+        <div className="absolute bottom-4 right-4 flex gap-3 items-center z-20">
+          {/* Numeric counter */}
+          <span className="text-primary font-mono font-bold text-sm pointer-events-none">
+            {currentSlide + 1} / {images.length}
+          </span>
+
+          {/* Dot indicators */}
+          <div className="flex gap-2">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`rounded-full transition-all duration-base pointer-events-auto ${
+                  index === currentSlide
+                    ? "bg-primary w-3 h-3"
+                    : "bg-white/30 hover:bg-white/60 w-2 h-2"
+                }`}
+                aria-label={`Go to image ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>
