@@ -90,6 +90,12 @@ export function ImageCarousel({
         ref={scrollContainerRef}
         className="absolute inset-0 overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory scrollbar-hide"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        onPointerDown={(e) => {
+          // Allow clicks on the scrollable images but don't interfere with buttons
+          if ((e.target as HTMLElement).closest("button")) {
+            e.stopPropagation();
+          }
+        }}
       >
         <style>{`
         .scrollbar-hide::-webkit-scrollbar {
@@ -123,11 +129,11 @@ export function ImageCarousel({
       {canScrollLeft && (
         <button
           onClick={() => scroll("left")}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 pointer-events-auto bg-black/50 hover:bg-primary hover:text-neutral text-primary p-3 rounded-full transition-all duration-base backdrop-blur-sm"
+          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 pointer-events-auto bg-black/50 hover:bg-primary hover:text-neutral text-primary p-2 sm:p-3 rounded-full transition-all duration-base backdrop-blur-sm"
           aria-label="Previous image"
         >
           <svg
-            className="w-6 h-6"
+            className="w-4 h-4 sm:w-6 sm:h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -146,11 +152,11 @@ export function ImageCarousel({
       {canScrollRight && (
         <button
           onClick={() => scroll("right")}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 pointer-events-auto bg-black/50 hover:bg-primary hover:text-neutral text-primary p-3 rounded-full transition-all duration-base backdrop-blur-sm"
+          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 pointer-events-auto bg-black/50 hover:bg-primary hover:text-neutral text-primary p-2 sm:p-3 rounded-full transition-all duration-base backdrop-blur-sm"
           aria-label="Next image"
         >
           <svg
-            className="w-6 h-6"
+            className="w-4 h-4 sm:w-6 sm:h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -167,22 +173,22 @@ export function ImageCarousel({
 
       {/* Bottom Right Controls */}
       {images.length > 1 && (
-        <div className="absolute bottom-4 right-4 flex gap-3 items-center z-20">
+        <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 flex gap-2 sm:gap-3 items-center z-20">
           {/* Numeric counter */}
-          <span className="text-primary font-mono font-bold text-sm pointer-events-none">
+          <span className="text-primary font-mono font-bold text-xs sm:text-sm pointer-events-none">
             {currentSlide + 1} / {images.length}
           </span>
 
           {/* Dot indicators */}
-          <div className="flex gap-2">
+          <div className="flex gap-1 sm:gap-2">
             {images.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
                 className={`rounded-full transition-all duration-base pointer-events-auto ${
                   index === currentSlide
-                    ? "bg-primary w-3 h-3"
-                    : "bg-white/30 hover:bg-white/60 w-2 h-2"
+                    ? "bg-primary w-2 h-2 sm:w-3 sm:h-3"
+                    : "bg-white/30 hover:bg-white/60 w-1.5 h-1.5 sm:w-2 sm:h-2"
                 }`}
                 aria-label={`Go to image ${index + 1}`}
               />

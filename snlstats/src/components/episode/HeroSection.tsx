@@ -1,4 +1,3 @@
-// src/components/episode/HeroSection.tsx
 "use client";
 
 import React from "react";
@@ -41,7 +40,7 @@ export function HeroSection({
 
   return (
     <div
-      className={`relative w-full h-screen md:h-[600px] lg:h-[700px] overflow-hidden rounded-lg ${className}`}
+      className={`relative w-full aspect-video md:aspect-auto md:h-screen overflow-hidden rounded-lg ${className}`}
     >
       {/* Image Carousel - Full Coverage */}
       <ImageCarousel
@@ -54,31 +53,35 @@ export function HeroSection({
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10 pointer-events-none" />
 
       {/* Content Container - Flexbox for proper bottom alignment */}
-      <div className="absolute inset-0 z-20 flex flex-col justify-end px-8 pb-8 md:px-12 md:pb-12 pointer-events-none">
-        <div className="flex flex-col md:flex-row justify-between items-end gap-8">
+      <div className="absolute inset-0 z-20 flex flex-col justify-end px-4 pb-6 sm:px-6 sm:pb-8 md:px-12 md:pb-12 pointer-events-none">
+        <div className="flex flex-col md:flex-row justify-between items-end gap-4 sm:gap-6 md:gap-8">
           {/* Left Column */}
-          <div className="max-w-2.5xl">
-            <div className="mb-3 inline-block">
-              <span className="text-white font-mono font-bold text-xs  rounded-full">
+          <div className="w-full sm:max-w-2.5xl">
+            <div className="mb-2 sm:mb-3 inline-block">
+              <span className="text-white font-mono font-bold text-xs rounded-full">
                 AIRED: {formattedDate}
               </span>
             </div>
 
-            <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-tertiary mb-8 leading-tight">
+            <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-tertiary mb-4 sm:mb-6 md:mb-8 leading-tight">
               SEASON {season}, EPISODE {episode}
             </h1>
 
-            <div className="flex flex-col gap-6">
-              <div className="flex items-baseline gap-3">
-                <span className="stat-label uppercase text-sm">HOST:</span>
-                <span className="font-sans text-xl md:text-2xl font-bold text-primary uppercase">
+            <div className="flex flex-col gap-3 sm:gap-4 md:gap-6">
+              <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-3">
+                <span className="stat-label uppercase text-xs sm:text-sm whitespace-nowrap">
+                  HOST:
+                </span>
+                <span className="font-sans text-lg sm:text-xl md:text-2xl font-bold text-primary uppercase break-words">
                   {host}
                 </span>
               </div>
 
-              <div className="flex items-baseline gap-3">
-                <span className="stat-label uppercase text-sm">MUSIC:</span>
-                <span className="font-sans text-xl md:text-2xl font-bold text-primary uppercase">
+              <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-3">
+                <span className="stat-label uppercase text-xs sm:text-sm whitespace-nowrap">
+                  MUSIC:
+                </span>
+                <span className="font-sans text-lg sm:text-xl md:text-2xl font-bold text-primary uppercase break-words">
                   {musicalGuest}
                 </span>
               </div>
