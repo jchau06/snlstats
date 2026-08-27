@@ -103,7 +103,7 @@ export default async function EpisodePage({ params }: Props) {
       <div className="px-4 md:px-8 py-12">
         <div className="max-w-6xl mx-auto space-y-12">
           {/* Performance Analytics Section */}
-          {/* <PerformanceAnalyticsSection data={performanceData} /> */}
+          <PerformanceAnalyticsSection data={performanceData} />
 
           {/* Navigation */}
           <div className="flex justify-between items-center pt-8 border-t border-[#2C2C2A]">
