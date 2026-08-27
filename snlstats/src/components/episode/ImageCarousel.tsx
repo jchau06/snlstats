@@ -29,7 +29,11 @@ export function ImageCarousel({
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
 
       // Calculate current slide based on scroll position
-      const slideIndex = Math.round(scrollLeft / clientWidth);
+      // Use Math.round and clamp to valid range to handle edge cases
+      const slideIndex = Math.min(
+        images.length - 1,
+        Math.round(scrollLeft / clientWidth)
+      );
       setCurrentSlide(slideIndex);
     }
   };
@@ -63,7 +67,9 @@ export function ImageCarousel({
 
   const goToSlide = (index: number) => {
     if (scrollContainerRef.current) {
-      const scrollAmount = scrollContainerRef.current.clientWidth * index;
+      // Clamp index to valid range
+      const validIndex = Math.max(0, Math.min(images.length - 1, index));
+      const scrollAmount = scrollContainerRef.current.clientWidth * validIndex;
       scrollContainerRef.current.scrollTo({
         left: scrollAmount,
         behavior: "smooth",
