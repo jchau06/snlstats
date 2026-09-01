@@ -139,7 +139,7 @@ export function PerformanceBarChart({
       case "screenTime":
         return "Screen Time:";
       case "sketchCount":
-        return "Sketch Count:";
+        return "Appearances:";
       case "powerRanking":
         return "Power Ranking:";
     }
@@ -248,7 +248,7 @@ export function PerformanceBarChart({
               {getMetricLabel()}
             </h3>
             <p className="stat-label mt-1">
-              {showAll ? "All" : "Top Five"} cast members:
+              {showAll ? "All" : "Top five"} cast members:
             </p>
           </div>
 

@@ -15,7 +15,7 @@ export function PerformanceMetricToggle({
 }: PerformanceMetricToggleProps) {
   const metrics: Array<{ key: Metric; label: string }> = [
     { key: 'screenTime', label: 'Screen Time' },
-    { key: 'sketchCount', label: 'Sketch Count' },
+    { key: 'sketchCount', label: 'Appearances' },
     { key: 'powerRanking', label: 'Power Rankings' },
   ];
  

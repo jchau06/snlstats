@@ -7,7 +7,7 @@ interface TableColumn {
   sortable?: boolean;
   highlight?: boolean;
 }
- 
+
 interface TableProps {
   columns: TableColumn[];
   data: Array<Record<string, React.ReactNode>>;
@@ -16,7 +16,7 @@ interface TableProps {
   sortOrder?: 'asc' | 'desc';
   className?: string;
 }
- 
+
 export function Table({
   columns,
   data,
@@ -44,8 +44,12 @@ export function Table({
               >
                 <div className="flex items-center gap-2">
                   {col.label}
-                  {col.sortable && sortBy === col.key && (
-                    <span className="text-xs">
+                  {col.sortable && (
+                    <span
+                      className={`text-xs transition-colors duration-base ${
+                        sortBy === col.key ? 'text-primary' : 'text-white/20'
+                      }`}
+                    >
                       {sortOrder === 'asc' ? '↑' : '↓'}
                     </span>
                   )}
