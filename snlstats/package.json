@@ -8,7 +8,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "load-data": "tsx scripts/loadEpisodeData.ts"
+    "load-data": "tsx scripts/loadEpisodeData.ts",
+    "seed:cast": "tsx scripts/seed-season-cast.ts",
+    "seed:media": "tsx scripts/seed-season-media.ts",
+    "seed:stats": "tsx scripts/generate-season-stats.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.15.0",

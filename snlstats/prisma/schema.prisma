@@ -16,8 +16,11 @@ model CastMember {
   headshot    String?
   createdAt   DateTime @default(now())
 
-  performances CastPerformance[]
-  sketchAppearances SketchAppearance[]
+  performances       CastPerformance[]
+  sketchAppearances  SketchAppearance[]
+  seasonStats        SeasonStats[]
+  seasonCast         SeasonCast[]
+  seasonMedia  SeasonCastMedia[]
 
   @@index([slug])
   @@index([status])
@@ -29,11 +32,29 @@ model Season {
   yearStarted Int
   yearEnded   Int
   numEpisodes Int
+  heroImageUrl String?
   createdAt   DateTime @default(now())
 
   episodes    Episode[]
+  stats       SeasonStats[]
+  castMembers SeasonCast[]
+  castMedia     SeasonCastMedia[]  
 
   @@index([seasonNumber])
+}
+
+model SeasonCast {
+  id          String   @id @default(cuid())
+  seasonId    String
+  castMemberId String
+  createdAt   DateTime @default(now())
+
+  season      Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  castMember  CastMember @relation(fields: [castMemberId], references: [id], onDelete: Cascade)
+
+  @@unique([seasonId, castMemberId])
+  @@index([seasonId])
+  @@index([castMemberId])
 }
 
 model Episode {
@@ -64,7 +85,7 @@ model CastPerformance {
   screenTimeSeconds   Int
   sketchCount         Int
   powerRanking        Decimal  @db.Decimal(5, 2)
-  status              String   @default("present")  // 'present', 'absent'
+  status              String   @default("present")
   createdAt           DateTime @default(now())
 
   episode             Episode  @relation(fields: [episodeId], references: [id], onDelete: Cascade)
@@ -113,5 +134,43 @@ model SketchAppearance {
 
   @@unique([sketchId, castMemberId])
   @@index([sketchId])
+  @@index([castMemberId])
+}
+
+model SeasonStats {
+  id                       String   @id @default(cuid())
+  seasonId                 String
+  castMemberId             String
+  
+  totalScreenTimeSeconds   Int      @default(0)
+  totalAppearances         Int      @default(0)
+  averageScreenTimeSeconds Decimal  @db.Decimal(8, 2)
+  averageAppearances       Decimal  @db.Decimal(5, 2)
+  powerRankingSeason       Decimal  @db.Decimal(5, 2)
+  
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+
+  season                   Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  castMember               CastMember @relation(fields: [castMemberId], references: [id], onDelete: Cascade)
+
+  @@unique([seasonId, castMemberId])
+  @@index([seasonId])
+  @@index([castMemberId])
+}
+
+model SeasonCastMedia {
+  id              String   @id @default(cuid())
+  seasonId        String
+  castMemberId    String
+  imageUrl        String   // Season opening photo or custom appearance image
+  imageType       String   @default("season-opening") // "season-opening", "promotional", etc.
+  createdAt       DateTime @default(now())
+
+  season          Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  castMember      CastMember @relation(fields: [castMemberId], references: [id], onDelete: Cascade)
+
+  @@unique([seasonId, castMemberId, imageType])
+  @@index([seasonId])
   @@index([castMemberId])
 }
