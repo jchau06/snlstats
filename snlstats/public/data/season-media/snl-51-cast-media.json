@@ -1,0 +1,74 @@
+{
+  "seasonNumber": 51,
+  "heroImageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/snl-51-cast.jpg",
+  "seasonOpening": [
+    {
+      "castMemberName": "Michael Che",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/michael-che-opening.jpg"
+    },
+    {
+      "castMemberName": "Mikey Day",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/mikey-day-opening.jpg"
+    },
+    {
+      "castMemberName": "Andrew Dismukes",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/andrew-dismukes-opening.jpg"
+    },
+    {
+      "castMemberName": "Chloe Fineman",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/chloe-fineman-opening.jpg"
+    },
+    {
+      "castMemberName": "Marcello Hernandez",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/marcello-hernandez-opening.jpg"
+    },
+    {
+      "castMemberName": "James Austin Johnson",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/james-austin-johnson-opening.jpg"
+    },
+    {
+      "castMemberName": "Colin Jost",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/colin-jost-opening.jpg"
+    },
+    {
+      "castMemberName": "Sarah Sherman",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/sarah-sherman-opening.jpg"
+    },
+    {
+      "castMemberName": "Kenan Thompson",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/kenan-thompson-opening.jpg"
+    },
+    {
+      "castMemberName": "Bowen Yang",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/bowen-yang-opening.jpg"
+    },
+    {
+      "castMemberName": "Tommy Brennan",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/tommy-brennan-opening.jpg"
+    },
+    {
+      "castMemberName": "Jeremy Culhane",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/jeremy-culhane-opening.jpg"
+    },
+    {
+      "castMemberName": "Ben Marshall",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/ben-marshall-opening.jpg"
+    },
+    {
+      "castMemberName": "Ashley Padilla",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/ashley-padilla-opening.jpg"
+    },
+    {
+      "castMemberName": "Kam Patterson",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/kam-patterson-opening.jpg"
+    },
+    {
+      "castMemberName": "Veronika Slowikowska",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/veronika-slowikowska-opening.jpg"
+    },
+    {
+      "castMemberName": "Jane Wickline",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/jane-wickline-opening.jpg"
+    }
+  ]
+}
