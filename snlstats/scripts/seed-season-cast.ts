@@ -1,41 +1,65 @@
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
+import * as fs from "fs";
+import * as path from "path";
 
 const prisma = new PrismaClient();
+
+interface SeasonOpeningData {
+  castMemberName: string;
+  status: "repertory" | "featured";
+  imageUrl: string;
+}
+
+interface SeasonData {
+  seasonNumber: number;
+  heroImageUrl: string;
+  seasonOpening: SeasonOpeningData[];
+}
 
 async function seedSeasonCast(seasonNumber: number) {
   console.log(`Linking cast members to Season ${seasonNumber}...`);
 
-  // Get all unique cast members who performed in this season
-  const performances = await prisma.castPerformance.findMany({
-    where: {
-      episode: { season: { seasonNumber } },
-      status: "present",
-    },
-    distinct: ["castMemberId"],
-    include: { castMember: true },
+  // Load season data from JSON
+  const dataPath = path.join(
+    process.cwd(),
+    `public/data/season-media/snl-${seasonNumber}-cast-media.json`
+  );
+  const seasonData: SeasonData = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
+
+  // Get season
+  const season = await prisma.season.findUnique({
+    where: { seasonNumber },
   });
 
-  // Create SeasonCast entries
+  if (!season) {
+    console.error(`Season ${seasonNumber} not found`);
+    return;
+  }
+
   let linkedCount = 0;
-  for (const perf of performances) {
-    const season = await prisma.season.findUnique({
-      where: { seasonNumber },
+  for (const opening of seasonData.seasonOpening) {
+    const castMember = await prisma.castMember.findUnique({
+      where: { name: opening.castMemberName },
     });
 
-    if (!season) continue;
+    if (!castMember) {
+      console.warn(`Cast member not found: ${opening.castMemberName}`);
+      continue;
+    }
 
     await prisma.seasonCast.upsert({
       where: {
         seasonId_castMemberId: {
           seasonId: season.id,
-          castMemberId: perf.castMemberId,
+          castMemberId: castMember.id,
         },
       },
-      update: {},
+      update: { status: opening.status },
       create: {
         seasonId: season.id,
-        castMemberId: perf.castMemberId,
+        castMemberId: castMember.id,
+        status: opening.status,
       },
     });
 

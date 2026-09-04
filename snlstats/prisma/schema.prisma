@@ -47,6 +47,7 @@ model SeasonCast {
   id          String   @id @default(cuid())
   seasonId    String
   castMemberId String
+  status      String   @default("repertory") 
   createdAt   DateTime @default(now())
 
   season      Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
