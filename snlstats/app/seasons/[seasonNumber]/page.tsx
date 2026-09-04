@@ -45,6 +45,7 @@ export default async function SeasonPage({ params }: Props) {
           musicalGuest: true,
           slug: true,
           seasonId: true,
+          imageUrls: true,
         },
       },
       castMembers: {
@@ -88,6 +89,7 @@ export default async function SeasonPage({ params }: Props) {
     host: ep.host || "TBD",
     musicalGuest: ep.musicalGuest || "TBD",
     slug: ep.slug,
+    imageUrls: ep.imageUrls || [],
   }));
 
   // Transform cast data for CastGrid (present members only)
@@ -140,9 +142,7 @@ export default async function SeasonPage({ params }: Props) {
               <h2 className="font-heading text-h3 text-tertiary font-bold mb-6">
                 EPISODES
               </h2>
-              <EpisodeGrid
-                episodes={episodes}
-              />
+              <EpisodeGrid episodes={episodes} />
             </section>
 
             {/* Cast Section */}

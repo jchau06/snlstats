@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Episode {
   id: string;
@@ -11,6 +12,7 @@ interface Episode {
   host: string;
   musicalGuest: string;
   slug?: string;
+  imageUrls?: string[];
 }
 
 interface EpisodeGridProps {
@@ -22,16 +24,25 @@ export function EpisodeGrid({
   episodes,
   className = "",
 }: EpisodeGridProps) {
+  const [showAll, setShowAll] = useState(false);
+
   const formatDate = (date: Date) => {
     return date.toLocaleDateString("en-US", {
-      month: "short",
+      month: "2-digit",
       day: "2-digit",
-      year: "numeric",
+      year: "2-digit",
     });
   };
 
   const getEpisodeLink = (episode: Episode): string => {
     return `/seasons/${episode.seasonNumber}/episodes/${episode.episodeNumber}`;
+  };
+
+  const isDoubleDuty = (episode: Episode): boolean => {
+    return (
+      episode.host.toLowerCase() ===
+      episode.musicalGuest.toLowerCase()
+    );
   };
 
   if (!episodes || episodes.length === 0) {
@@ -42,46 +53,83 @@ export function EpisodeGrid({
     );
   }
 
+  const displayedEpisodes = showAll ? episodes : episodes.slice(0, 8);
+
   return (
-    <div
-      className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 ${className}`}
-    >
-      {episodes.map((episode) => (
-        <Link
-          key={episode.id}
-          href={getEpisodeLink(episode)}
-          className="group"
-        >
-          <div className="border border-[#2C2C2A] rounded-lg p-4 sm:p-6 bg-black/40 hover:bg-black/60 hover:border-primary transition-all duration-base cursor-pointer h-full flex flex-col">
-            {/* Header */}
-            <div className="flex justify-between items-start mb-3 sm:mb-4">
-              <span className="stat-label text-xs uppercase font-mono">
-                EPISODE {episode.episodeNumber}
-              </span>
-              <span className="text-[#B4B2A9] text-xs font-mono">
-                {formatDate(episode.airDate)}
-              </span>
-            </div>
-
-            {/* Host & Musical Guest */}
-            <div className="flex-1 flex flex-col gap-3 sm:gap-4">
-              <div>
-                <p className="stat-label text-xs mb-1 uppercase">HOST</p>
-                <p className="font-sans font-bold text-tertiary text-base sm:text-lg group-hover:text-primary transition-colors duration-base">
-                  {episode.host}
-                </p>
+    <div className={className}>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+        {displayedEpisodes.map((episode) => (
+          <Link
+            key={episode.id}
+            href={getEpisodeLink(episode)}
+            className="group"
+          >
+            <div className="flex flex-col h-full cursor-pointer">
+              {/* Episode Header Badge + Date */}
+              <div className="flex items-center justify-between mb-2 sm:mb-3 px-1">
+                <span className="stat-label text-[10px] sm:text-xs uppercase font-mono bg-[#3A3A38] rounded-full px-2 py-0.5">
+                  E{episode.episodeNumber}
+                </span>
+                <span className="text-[#8A8885] text-[10px] sm:text-xs font-mono">
+                  {formatDate(episode.airDate)}
+                </span>
               </div>
 
-              <div>
-                <p className="stat-label text-xs mb-1 uppercase">MUSICAL GUEST</p>
-                <p className="font-sans font-bold text-tertiary text-base sm:text-lg group-hover:text-primary transition-colors duration-base">
-                  {episode.musicalGuest}
-                </p>
+              {/* Image Container */}
+              <div className="relative w-full aspect-video mb-3 sm:mb-4 overflow-hidden rounded-lg bg-[#222222] border border-[#2C2C2A] group-hover:border-primary transition-all duration-base">
+                {episode.imageUrls && episode.imageUrls.length > 0 ? (
+                  <Image
+                    src={episode.imageUrls[0]}
+                    alt={`${episode.host} - ${episode.musicalGuest}`}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-base"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src =
+                        'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"%3E%3Crect fill="%23222222" width="400" height="225"/%3E%3C/svg%3E';
+                    }}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-[#8A8885] text-xs">
+                    No image
+                  </div>
+                )}
+              </div>
+
+              {/* Host / Musical Guest */}
+              <div className="text-center">
+                {isDoubleDuty(episode) ? (
+                  <p className="font-sans font-bold text-tertiary text-xs sm:text-sm group-hover:text-primary transition-colors duration-base line-clamp-1">
+                    {episode.host}
+                  </p>
+                ) : (
+                  <>
+                    <p className="font-sans font-bold text-tertiary text-xs sm:text-sm group-hover:text-primary transition-colors duration-base line-clamp-1">
+                      {episode.host}
+                    </p>
+                    <p className="text-[#8A8885] text-[10px] sm:text-xs line-clamp-1">
+                      {episode.musicalGuest}
+                    </p>
+                  </>
+                )}
               </div>
             </div>
-          </div>
-        </Link>
-      ))}
+          </Link>
+        ))}
+      </div>
+
+      {/* Expand/Collapse Button */}
+      {episodes.length > 8 && (
+        <div className="mt-6 sm:mt-8 text-center">
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="text-primary hover:text-tertiary font-sans font-semibold text-sm transition-colors duration-base"
+          >
+            {showAll
+              ? "See first 8 episodes"
+              : `See all ${episodes.length} episodes`}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
