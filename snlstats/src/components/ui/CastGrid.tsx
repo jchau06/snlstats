@@ -9,7 +9,7 @@ export interface CastMember {
   name: string;
   slug: string;
   headshot?: string;
-  status?: "present" | "featured" | "alum";
+  status?: "present" | "featured" | "alum" | "repertory";
   // Optional stats display
   screenTimeSeconds?: number;
   appearances?: number;
@@ -46,6 +46,28 @@ export function CastGrid({
     return `grid-cols-2 sm:grid-cols-3 lg:grid-cols-${columns}`;
   };
 
+  const getLastName = (fullName: string): string => {
+    const parts = fullName.trim().split(" ");
+    return parts[parts.length - 1];
+  };
+
+  // Sort cast members: repertory first, then featured, then alphabetically by last name
+  const sortedCastMembers = [...castMembers].sort((a, b) => {
+    // Priority: repertory (0) before featured (1)
+    const statusOrder = { repertory: 0, featured: 1 };
+    const statusA = statusOrder[a.status as keyof typeof statusOrder] ?? 2;
+    const statusB = statusOrder[b.status as keyof typeof statusOrder] ?? 2;
+
+    if (statusA !== statusB) {
+      return statusA - statusB;
+    }
+
+    // Then alphabetically by last name
+    const lastNameA = getLastName(a.name);
+    const lastNameB = getLastName(b.name);
+    return lastNameA.localeCompare(lastNameB);
+  });
+
   if (!castMembers || castMembers.length === 0) {
     return (
       <div className={`text-center py-12 ${className}`}>
@@ -58,7 +80,7 @@ export function CastGrid({
     <div
       className={`grid ${getGridColsClass()} gap-3 sm:gap-4 lg:gap-6 ${className}`}
     >
-      {castMembers.map((member) => (
+      {sortedCastMembers.map((member) => (
         <Link
           key={member.id}
           href={getCastLink(member)}

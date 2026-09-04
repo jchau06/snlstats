@@ -59,6 +59,10 @@ export default async function SeasonPage({ params }: Props) {
             },
           },
         },
+        orderBy: [
+          { status: "asc" }, // "featured" before "repertory" alphabetically, so reverse needed
+          { castMember: { name: "asc" } }, // Then alphabetically by name
+        ],
       },
       stats: {
         include: {
@@ -92,14 +96,28 @@ export default async function SeasonPage({ params }: Props) {
     imageUrls: ep.imageUrls || [],
   }));
 
-  // Transform cast data for CastGrid (present members only)
-  const castMembers = season.castMembers.map((sc) => ({
-    id: sc.castMember.id,
-    name: sc.castMember.name,
-    slug: sc.castMember.slug,
-    headshot: sc.castMember.headshot || undefined,
-    status: "present" as const,
-  }));
+  // Transform cast data for CastGrid (sorted by season status then name)
+  const castMembers = season.castMembers
+    .sort((a, b) => {
+      // Priority: repertory first, then featured
+      const statusOrder = { repertory: 0, featured: 1 };
+      const statusA = statusOrder[a.status as keyof typeof statusOrder] ?? 2;
+      const statusB = statusOrder[b.status as keyof typeof statusOrder] ?? 2;
+      
+      if (statusA !== statusB) {
+        return statusA - statusB;
+      }
+      
+      // Then alphabetically by name
+      return a.castMember.name.localeCompare(b.castMember.name);
+    })
+    .map((sc) => ({
+      id: sc.castMember.id,
+      name: sc.castMember.name,
+      slug: sc.castMember.slug,
+      headshot: sc.castMember.headshot || undefined,
+      status: (sc.status as "repertory" | "featured") || "repertory",
+    }));
 
   // Transform stats data for DetailedStatsTable
   const statsData = season.stats.map((stat) => ({
