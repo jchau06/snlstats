@@ -10,7 +10,7 @@
     {
       "castMemberName": "Mikey Day",
       "status": "repertory",
-      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/mikey-day-opening.jpg"
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/mikey-day-opening-jpg.jpg"
     },
     {
       "castMemberName": "Andrew Dismukes",
@@ -25,7 +25,7 @@
     {
       "castMemberName": "Marcello Hernandez",
       "status": "repertory",
-      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/marcello-hernandez-opening.jpg"
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/marcello-hernandez-opening.png"
     },
     {
       "castMemberName": "James Austin Johnson",
@@ -40,17 +40,17 @@
     {
       "castMemberName": "Sarah Sherman",
       "status": "repertory",
-      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/sarah-sherman-opening.jpg"
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/sarah-sherman-opening.png"
     },
     {
       "castMemberName": "Kenan Thompson",
       "status": "repertory",
-      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/kenan-thompson-opening.jpg"
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/kenan-thompson-opening.png"
     },
     {
       "castMemberName": "Bowen Yang",
       "status": "repertory",
-      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/bowen-yang-opening.jpg"
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/bowen-yang-opening.png"
     },
     {
       "castMemberName": "Tommy Brennan",
@@ -70,7 +70,7 @@
     {
       "castMemberName": "Ashley Padilla",
       "status": "featured",
-      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/ashley-padilla-opening.jpg"
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/ashley-padilla-opening.png"
     },
     {
       "castMemberName": "Kam Patterson",
@@ -80,12 +80,12 @@
     {
       "castMemberName": "Veronika Slowikowska",
       "status": "featured",
-      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/veronika-slowikowska-opening.jpg"
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/veronica-slowikowska-opening.jpg"
     },
     {
       "castMemberName": "Jane Wickline",
       "status": "featured",
-      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/jane-wickline-opening.jpg"
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-51-media/jane-wickline-opening.png"
     }
   ]
 }
