@@ -4,8 +4,8 @@ import { notFound } from "next/navigation";
 import { Header } from "@/src/components/ui/Header";
 import { SeasonHeroSection } from "@/src/components/season/SeasonHeroSection";
 import { EpisodeGrid } from "@/src/components/ui/EpisodeGrid";
-import { SeasonCastGrid } from "@/src/components/ui/CastGrid";
-import { DetailedStatsTable } from "@/src/components/episode/DetailedStatsTable";
+import { SeasonCastGrid } from "@/src/components/season/SeasonCastGrid";
+import { SeasonStatsTable } from "@/src/components/season/SeasonStatsTable";
 
 interface Props {
   params: Promise<{
@@ -129,16 +129,15 @@ export default async function SeasonPage({ params }: Props) {
       };
     });
 
-  // Transform stats data for DetailedStatsTable
+  // Transform stats data for SeasonStatsTable
   const statsData = season.stats.map((stat) => ({
-    id: stat.castMember.id,
+    castMemberId: stat.castMember.id,
     name: stat.castMember.name,
     slug: stat.castMember.slug,
     headshot: stat.castMember.headshot || undefined,
-    screenTimeSeconds: stat.totalScreenTimeSeconds,
-    sketchCount: stat.totalAppearances,
-    powerRanking: Number(stat.powerRankingSeason),
-    status: "present",
+    totalScreenTimeSeconds: stat.totalScreenTimeSeconds,
+    totalAppearances: stat.totalAppearances,
+    powerRankingSeason: Number(stat.powerRankingSeason),
   }));
 
   return (
@@ -186,7 +185,10 @@ export default async function SeasonPage({ params }: Props) {
               <h2 className="font-heading text-h3 text-tertiary font-bold mb-6">
                 CAST PERFORMANCE
               </h2>
-              <DetailedStatsTable data={statsData} />
+              <SeasonStatsTable
+                data={statsData}
+                totalEpisodes={season.numEpisodes}
+              />
             </section>
           </div>
         </div>
