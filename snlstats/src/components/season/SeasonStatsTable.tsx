@@ -183,7 +183,10 @@ export function SeasonStatsTable({
 
       screenTime: formatScreenTime(displayScreenTime),
 
-      sketchCount: String(displayAppearances),
+      sketchCount:
+        statMode === "averages"
+          ? Number(displayAppearances).toFixed(2)
+          : String(Math.round(displayAppearances)),
 
       powerRanking: Number(displayPowerRanking).toFixed(1),
 

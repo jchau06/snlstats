@@ -46,6 +46,7 @@ export default async function SeasonPage({ params }: Props) {
           slug: true,
           seasonId: true,
           imageUrls: true,
+          liveFromNewYork: true,
         },
       },
       castMembers: {
@@ -86,6 +87,16 @@ export default async function SeasonPage({ params }: Props) {
   if (!season) {
     notFound();
   }
+
+  // Build LFNY count map
+  const lfnyCountMap: { [castMemberId: string]: number } = {};
+  season.episodes.forEach((ep) => {
+    if (ep.liveFromNewYork?.castMemberIds) {
+      ep.liveFromNewYork.castMemberIds.forEach((castMemberId) => {
+        lfnyCountMap[castMemberId] = (lfnyCountMap[castMemberId] || 0) + 1;
+      });
+    }
+  });
 
   // Transform episode data for EpisodeGrid
   const episodes = season.episodes.map((ep) => ({
@@ -187,6 +198,7 @@ export default async function SeasonPage({ params }: Props) {
               </h2>
               <SeasonStatsTable
                 data={statsData}
+                lfnyCount={lfnyCountMap}
                 totalEpisodes={season.numEpisodes}
               />
             </section>
