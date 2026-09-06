@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/src/components/ui/Header";
 import { SeasonHeroSection } from "@/src/components/season/SeasonHeroSection";
 import { EpisodeGrid } from "@/src/components/ui/EpisodeGrid";
-import { CastGrid } from "@/src/components/ui/CastGrid";
+import { SeasonCastGrid } from "@/src/components/ui/CastGrid";
 import { DetailedStatsTable } from "@/src/components/episode/DetailedStatsTable";
 
 interface Props {
@@ -60,9 +60,12 @@ export default async function SeasonPage({ params }: Props) {
           },
         },
         orderBy: [
-          { status: "asc" }, // "featured" before "repertory" alphabetically, so reverse needed
-          { castMember: { name: "asc" } }, // Then alphabetically by name
+          { status: "asc" },
+          { castMember: { name: "asc" } },
         ],
+      },
+      castMedia: {
+        where: { imageType: "season-opening" },
       },
       stats: {
         include: {
@@ -96,28 +99,35 @@ export default async function SeasonPage({ params }: Props) {
     imageUrls: ep.imageUrls || [],
   }));
 
-  // Transform cast data for CastGrid (sorted by season status then name)
+  // Transform cast data for SeasonCastGrid with season-opening images
   const castMembers = season.castMembers
     .sort((a, b) => {
       // Priority: repertory first, then featured
       const statusOrder = { repertory: 0, featured: 1 };
       const statusA = statusOrder[a.status as keyof typeof statusOrder] ?? 2;
       const statusB = statusOrder[b.status as keyof typeof statusOrder] ?? 2;
-      
+
       if (statusA !== statusB) {
         return statusA - statusB;
       }
-      
+
       // Then alphabetically by name
       return a.castMember.name.localeCompare(b.castMember.name);
     })
-    .map((sc) => ({
-      id: sc.castMember.id,
-      name: sc.castMember.name,
-      slug: sc.castMember.slug,
-      headshot: sc.castMember.headshot || undefined,
-      status: (sc.status as "repertory" | "featured") || "repertory",
-    }));
+    .map((sc) => {
+      // Find season-opening image for this cast member
+      const seasonOpeningMedia = season.castMedia.find(
+        (media) => media.castMemberId === sc.castMember.id
+      );
+
+      return {
+        id: sc.castMember.id,
+        name: sc.castMember.name,
+        slug: sc.castMember.slug,
+        seasonOpeningImageUrl: seasonOpeningMedia?.imageUrl,
+        status: (sc.status as "repertory" | "featured") || "repertory",
+      };
+    });
 
   // Transform stats data for DetailedStatsTable
   const statsData = season.stats.map((stat) => ({
@@ -168,11 +178,7 @@ export default async function SeasonPage({ params }: Props) {
               <h2 className="font-heading text-h3 text-tertiary font-bold mb-6">
                 CAST
               </h2>
-              <CastGrid
-                castMembers={castMembers}
-                showStats={false}
-                columns="auto"
-              />
+              <SeasonCastGrid castMembers={castMembers} columns="auto" />
             </section>
 
             {/* Cast Performance Stats Section */}

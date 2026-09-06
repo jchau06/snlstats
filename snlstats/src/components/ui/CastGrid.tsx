@@ -4,38 +4,26 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-export interface CastMember {
+export interface SeasonCastMember {
   id: string;
   name: string;
   slug: string;
-  headshot?: string;
-  status?: "present" | "featured" | "alum" | "repertory";
-  // Optional stats display
-  screenTimeSeconds?: number;
-  appearances?: number;
-  powerRanking?: number;
+  seasonOpeningImageUrl?: string;
+  status?: "repertory" | "featured";
 }
 
-interface CastGridProps {
-  castMembers: CastMember[];
+interface SeasonCastGridProps {
+  castMembers: SeasonCastMember[];
   className?: string;
-  showStats?: boolean;
-  columns?: "auto" | 3 | 4 | 5;
+  columns?: "auto" | 3 | 4 | 5 | 6;
 }
 
-export function CastGrid({
+export function SeasonCastGrid({
   castMembers,
   className = "",
-  showStats = false,
   columns = "auto",
-}: CastGridProps) {
-  const formatScreenTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${String(secs).padStart(2, "0")}`;
-  };
-
-  const getCastLink = (member: CastMember): string => {
+}: SeasonCastGridProps) {
+  const getCastLink = (member: SeasonCastMember): string => {
     return `/cast/${member.slug}`;
   };
 
@@ -51,9 +39,8 @@ export function CastGrid({
     return parts[parts.length - 1];
   };
 
-  // Sort cast members: repertory first, then featured, then alphabetically by last name
+  // Sort: repertory first, then featured, then alphabetically by last name
   const sortedCastMembers = [...castMembers].sort((a, b) => {
-    // Priority: repertory (0) before featured (1)
     const statusOrder = { repertory: 0, featured: 1 };
     const statusA = statusOrder[a.status as keyof typeof statusOrder] ?? 2;
     const statusB = statusOrder[b.status as keyof typeof statusOrder] ?? 2;
@@ -62,7 +49,6 @@ export function CastGrid({
       return statusA - statusB;
     }
 
-    // Then alphabetically by last name
     const lastNameA = getLastName(a.name);
     const lastNameB = getLastName(b.name);
     return lastNameA.localeCompare(lastNameB);
@@ -87,46 +73,49 @@ export function CastGrid({
           className="group"
         >
           <div className="flex flex-col h-full">
-            {/* Headshot Container */}
-            <div className="relative mb-3 sm:mb-4 aspect-square rounded-lg overflow-hidden bg-[#222222] border border-[#2C2C2A] group-hover:border-primary transition-all duration-base">
-              {member.headshot ? (
-                <Image
-                  src={member.headshot}
-                  alt={member.name}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-base"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src =
-                      'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Crect fill="%23222222" width="200" height="200"/%3E%3C/svg%3E';
-                  }}
-                />
+            {/* Season Opening Image */}
+            <div className="relative mb-2 sm:mb-3 aspect-video rounded-lg overflow-hidden bg-gradient-to-b from-[#3A3A38] to-[#222222] border border-[#2C2C2A] group-hover:border-primary transition-all duration-base">
+              {member.seasonOpeningImageUrl ? (
+                <>
+                  <Image
+                    src={member.seasonOpeningImageUrl}
+                    alt={member.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-base"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
+                    priority={false}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-10" />
+                </>
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-[#B4B2A9] text-xs">
-                  img
+                <div className="w-full h-full flex items-center justify-center">
+                  <svg
+                    className="w-8 h-8 text-[#3A3A38]"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
                 </div>
               )}
             </div>
 
             {/* Name */}
-            <p className="font-sans font-bold text-tertiary text-center text-xs sm:text-sm group-hover:text-primary transition-colors duration-base mb-1 sm:mb-2 line-clamp-2">
+            <p className="font-sans font-bold text-tertiary text-center text-xs sm:text-sm group-hover:text-primary transition-colors duration-base line-clamp-2">
               {member.name}
             </p>
 
-            {/* Stats (Optional) */}
-            {showStats && (
-              <div className="text-center text-[#8A8885] text-[10px] sm:text-xs space-y-0.5 sm:space-y-1">
-                {member.screenTimeSeconds !== undefined && (
-                  <p>{formatScreenTime(member.screenTimeSeconds)}</p>
-                )}
-                {member.appearances !== undefined && (
-                  <p>{member.appearances} appearances</p>
-                )}
-                {member.powerRanking !== undefined && (
-                  <p className="text-primary font-semibold">
-                    {member.powerRanking.toFixed(1)}
-                  </p>
-                )}
-              </div>
+            {/* Featured Badge */}
+            {member.status === "featured" && (
+              <p className="text-center text-[#F4D03F] text-[10px] sm:text-xs font-semibold mt-0.5">
+                Featured
+              </p>
             )}
           </div>
         </Link>
