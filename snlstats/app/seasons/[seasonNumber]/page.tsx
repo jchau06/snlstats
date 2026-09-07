@@ -68,25 +68,36 @@ export default async function SeasonPage({ params }: Props) {
       castMedia: {
         where: { imageType: "season-opening" },
       },
-      stats: {
-        include: {
-          castMember: {
-            select: {
-              id: true,
-              name: true,
-              slug: true,
-              headshot: true,
-            },
-          },
-        },
-        orderBy: { powerRankingSeason: "desc" },
-      },
     },
   });
 
   if (!season) {
     notFound();
   }
+
+  // Fetch all CastPerformance records for this season
+  const performances = await prisma.castPerformance.findMany({
+    where: {
+      episode: {
+        seasonId: season.id,
+      },
+    },
+    include: {
+      castMember: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          headshot: true,
+        },
+      },
+      episode: {
+        select: {
+          episodeNumber: true,
+        },
+      },
+    },
+  });
 
   // Build LFNY count map
   const lfnyCountMap: { [castMemberId: string]: number } = {};
@@ -97,6 +108,26 @@ export default async function SeasonPage({ params }: Props) {
       });
     }
   });
+
+  // Build LFNY count by episode for range filtering
+  const lfnyCountByEpisode: { [episodeNumber: number]: string[] } = {};
+  season.episodes.forEach((ep) => {
+    if (ep.liveFromNewYork?.castMemberIds) {
+      lfnyCountByEpisode[ep.episodeNumber] = ep.liveFromNewYork.castMemberIds;
+    }
+  });
+
+  // Transform performance data for SeasonStatsTable
+  const performanceData = performances.map((perf) => ({
+    castMemberId: perf.castMember.id,
+    name: perf.castMember.name,
+    slug: perf.castMember.slug,
+    headshot: perf.castMember.headshot || undefined,
+    episodeNumber: perf.episode.episodeNumber,
+    screenTimeSeconds: perf.screenTimeSeconds || 0,
+    sketchCount: perf.sketchCount || 0,
+    powerRanking: Number(perf.powerRanking) || 0,
+  }));
 
   // Transform episode data for EpisodeGrid
   const episodes = season.episodes.map((ep) => ({
@@ -139,17 +170,6 @@ export default async function SeasonPage({ params }: Props) {
         status: (sc.status as "repertory" | "featured") || "repertory",
       };
     });
-
-  // Transform stats data for SeasonStatsTable
-  const statsData = season.stats.map((stat) => ({
-    castMemberId: stat.castMember.id,
-    name: stat.castMember.name,
-    slug: stat.castMember.slug,
-    headshot: stat.castMember.headshot || undefined,
-    totalScreenTimeSeconds: stat.totalScreenTimeSeconds,
-    totalAppearances: stat.totalAppearances,
-    powerRankingSeason: Number(stat.powerRankingSeason),
-  }));
 
   return (
     <>
@@ -197,8 +217,8 @@ export default async function SeasonPage({ params }: Props) {
                 CAST PERFORMANCE
               </h2>
               <SeasonStatsTable
-                data={statsData}
-                lfnyCount={lfnyCountMap}
+                performanceData={performanceData}
+                lfnyCountByEpisode={lfnyCountByEpisode}
                 totalEpisodes={season.numEpisodes}
               />
             </section>

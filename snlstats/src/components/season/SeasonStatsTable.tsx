@@ -4,23 +4,20 @@ import React, { useState, useMemo } from "react";
 import { Table } from "../ui";
 import Image from "next/image";
 
-interface SeasonCastPerformanceData {
+interface CastPerformanceRecord {
   castMemberId: string;
   name: string;
   slug: string;
   headshot?: string;
-  totalScreenTimeSeconds: number;
-  totalAppearances: number;
-  powerRankingSeason: number;
-}
-
-interface LiveFromNewYorkData {
-  [castMemberId: string]: number;
+  episodeNumber: number;
+  screenTimeSeconds: number;
+  sketchCount: number;
+  powerRanking: number;
 }
 
 interface SeasonStatsTableProps {
-  data: SeasonCastPerformanceData[];
-  lfnyCount?: LiveFromNewYorkData;
+  performanceData: CastPerformanceRecord[];
+  lfnyCountByEpisode?: { [episodeNumber: number]: string[] }; // episode -> castMemberIds
   totalEpisodes?: number;
   backgroundImage?: string;
   className?: string;
@@ -35,8 +32,8 @@ type SortKey =
 type StatMode = "totals" | "averages";
 
 export function SeasonStatsTable({
-  data,
-  lfnyCount = {},
+  performanceData,
+  lfnyCountByEpisode = {},
   totalEpisodes = 1,
   backgroundImage,
   className = "",
@@ -46,32 +43,90 @@ export function SeasonStatsTable({
   const [episodeStart, setEpisodeStart] = useState(1);
   const [episodeEnd, setEpisodeEnd] = useState(totalEpisodes);
 
-  // Default to Power Ranking, descending
   const [sortBy, setSortBy] = useState<SortKey>("powerRanking");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
-  // Filter and sort data
-  const sortedData = useMemo(() => {
-    const sorted = [...data];
+  // Get unique cast members and aggregate data for the selected episode range
+  const aggregatedData = useMemo(() => {
+    const castMap: { [castMemberId: string]: {
+      name: string;
+      slug: string;
+      headshot?: string;
+      screenTimeSeconds: number;
+      sketchCount: number;
+      powerRankings: number[];
+      episodesAppeared: number;
+    } } = {};
 
-    // Sort by selected key
+    // Filter performance data by episode range
+    const rangeData = performanceData.filter(
+      (perf) => perf.episodeNumber >= episodeStart && perf.episodeNumber <= episodeEnd
+    );
+
+    // Aggregate by cast member
+    rangeData.forEach((perf) => {
+      if (!castMap[perf.castMemberId]) {
+        castMap[perf.castMemberId] = {
+          name: perf.name,
+          slug: perf.slug,
+          headshot: perf.headshot,
+          screenTimeSeconds: 0,
+          sketchCount: 0,
+          powerRankings: [],
+          episodesAppeared: 0,
+        };
+      }
+
+      castMap[perf.castMemberId].screenTimeSeconds += perf.screenTimeSeconds;
+      castMap[perf.castMemberId].sketchCount += perf.sketchCount;
+      castMap[perf.castMemberId].powerRankings.push(perf.powerRanking);
+      castMap[perf.castMemberId].episodesAppeared += 1;
+    });
+
+    return Object.entries(castMap).map(([castMemberId, data]) => ({
+      castMemberId,
+      ...data,
+      avgPowerRanking: data.powerRankings.length > 0
+        ? data.powerRankings.reduce((a, b) => a + b, 0) / data.powerRankings.length
+        : 0,
+    }));
+  }, [performanceData, episodeStart, episodeEnd]);
+
+  // Count LFNY for the selected range
+  const lfnyCount = useMemo(() => {
+    const count: { [castMemberId: string]: number } = {};
+
+    for (let ep = episodeStart; ep <= episodeEnd; ep++) {
+      const castMemberIds = lfnyCountByEpisode[ep] || [];
+      castMemberIds.forEach((castMemberId) => {
+        count[castMemberId] = (count[castMemberId] || 0) + 1;
+      });
+    }
+
+    return count;
+  }, [lfnyCountByEpisode, episodeStart, episodeEnd]);
+
+  // Sort data
+  const sortedData = useMemo(() => {
+    const sorted = [...aggregatedData];
+
     if (sortBy === "powerRanking") {
       sorted.sort((a, b) =>
         sortOrder === "desc"
-          ? Number(b.powerRankingSeason) - Number(a.powerRankingSeason)
-          : Number(a.powerRankingSeason) - Number(b.powerRankingSeason),
+          ? b.avgPowerRanking - a.avgPowerRanking
+          : a.avgPowerRanking - b.avgPowerRanking,
       );
     } else if (sortBy === "sketchCount") {
       sorted.sort((a, b) =>
         sortOrder === "desc"
-          ? b.totalAppearances - a.totalAppearances
-          : a.totalAppearances - b.totalAppearances,
+          ? b.sketchCount - a.sketchCount
+          : a.sketchCount - b.sketchCount,
       );
     } else if (sortBy === "screenTime") {
       sorted.sort((a, b) =>
         sortOrder === "desc"
-          ? b.totalScreenTimeSeconds - a.totalScreenTimeSeconds
-          : a.totalScreenTimeSeconds - b.totalScreenTimeSeconds,
+          ? b.screenTimeSeconds - a.screenTimeSeconds
+          : a.screenTimeSeconds - b.screenTimeSeconds,
       );
     } else if (sortBy === "lfnyCount") {
       sorted.sort((a, b) =>
@@ -84,10 +139,9 @@ export function SeasonStatsTable({
     }
 
     return showAll ? sorted : sorted.slice(0, 5);
-  }, [sortBy, sortOrder, showAll, data, lfnyCount]);
+  }, [sortBy, sortOrder, showAll, aggregatedData, lfnyCount]);
 
   const handleSort = (key: string) => {
-    // Rank reverses sort order
     if (key === "rank") {
       setSortOrder((current) => (current === "desc" ? "asc" : "desc"));
       return;
@@ -126,33 +180,24 @@ export function SeasonStatsTable({
     return `${minutes}:${String(secs).padStart(2, "0")}`;
   };
 
-  // Calculate episode range
   const numEpisodesInRange = episodeEnd - episodeStart + 1;
-  const episodeMultiplier = numEpisodesInRange / totalEpisodes;
-
-  const totalMembers = data.length;
 
   const tableData = sortedData.map((member, idx) => {
-    let displayScreenTime = member.totalScreenTimeSeconds || 0;
-    let displayAppearances = member.totalAppearances || 0;
-    let displayPowerRanking = member.powerRankingSeason || 0;
+    let displayScreenTime = member.screenTimeSeconds;
+    let displaySketchCount = member.sketchCount;
+    let displayPowerRanking = member.avgPowerRanking;
     let displayLfny = lfnyCount[member.castMemberId] || 0;
 
-    // If in averages mode, divide by number of episodes in range
-    if (
-      statMode === "averages" &&
-      numEpisodesInRange > 0 &&
-      totalEpisodes > 0
-    ) {
-      displayScreenTime = Math.round(displayScreenTime / totalEpisodes);
-      displayAppearances = Math.round(displayAppearances / totalEpisodes);
-      displayPowerRanking =
-        (displayPowerRanking / totalEpisodes) * numEpisodesInRange;
-      displayLfny = Math.round((displayLfny / totalEpisodes) * numEpisodesInRange);
+    // If in averages mode, divide by episodes appeared
+    if (statMode === "averages" && member.episodesAppeared > 0) {
+      displayScreenTime = Math.round(displayScreenTime / member.episodesAppeared);
+      displaySketchCount = displaySketchCount / member.episodesAppeared;
+      displayPowerRanking = displayPowerRanking; // Already averaged
+      displayLfny = Math.round(displayLfny / member.episodesAppeared);
     }
 
     return {
-      rank: String(sortOrder === "desc" ? idx + 1 : totalMembers - idx),
+      rank: String(sortOrder === "desc" ? idx + 1 : aggregatedData.length - idx),
 
       castMember: (
         <div className="flex items-center gap-3">
@@ -185,8 +230,8 @@ export function SeasonStatsTable({
 
       sketchCount:
         statMode === "averages"
-          ? Number(displayAppearances).toFixed(2)
-          : String(Math.round(displayAppearances)),
+          ? Number(displaySketchCount).toFixed(2)
+          : String(Math.round(displaySketchCount)),
 
       powerRanking: Number(displayPowerRanking).toFixed(1),
 
@@ -330,13 +375,13 @@ export function SeasonStatsTable({
         />
 
         {/* Footer */}
-        {data.length > 5 && (
+        {aggregatedData.length > 5 && (
           <div className="mt-4 text-center">
             <button
               onClick={() => setShowAll(!showAll)}
               className="text-primary hover:text-tertiary font-sans font-semibold transition-colors duration-base"
             >
-              {showAll ? "See top 5" : `See all ${data.length} members`}
+              {showAll ? "See top 5" : `See all ${aggregatedData.length} members`}
             </button>
           </div>
         )}
