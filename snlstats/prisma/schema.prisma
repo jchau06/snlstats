@@ -212,6 +212,8 @@ model CastMemberCareerStats {
   averageAppearancesPerEp  Decimal  @db.Decimal(5, 2)
   averagePowerRanking      Decimal  @db.Decimal(5, 2)
   totalLiveFromNewYorks    Int      @default(0)
+  yearJoined  Int?  // e.g., 2003
+  yearLeft    Int?  // e.g., 2024, or null if current
   
   createdAt                DateTime @default(now())
   updatedAt                DateTime @updatedAt
