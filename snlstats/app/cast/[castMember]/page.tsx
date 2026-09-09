@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/src/components/ui/Header";
 import { CastMemberHeroSection } from "@/src/components/cast/CastMemberHeroSection";
 import { CareerStatsSummary } from "@/src/components/cast/CareerStatsSummary";
+import { SeasonStatsChartServer } from "@/src/components/cast/SeasonStatsChartServer";
 
 interface Props {
   params: Promise<{
@@ -22,6 +23,11 @@ export default async function CastMemberPage({ params }: Props) {
   // In Next.js 15+, params is a Promise
   const { castMember: castMemberSlug } = await params;
 
+  // Debug: log the slug to verify it's coming through
+  if (!castMemberSlug) {
+    notFound();
+  }
+
   // Fetch cast member by slug
   const castMember = await prisma.castMember.findUnique({
     where: { slug: castMemberSlug },
@@ -32,6 +38,7 @@ export default async function CastMemberPage({ params }: Props) {
   }
 
   // Fetch career stats for this cast member
+  // Note: Prisma model name is CastMemberCareerStats, generates as castMemberCareerStats
   const careerStats = await prisma.castMemberCareerStats.findUnique({
     where: { castMemberId: castMember.id },
   });
@@ -150,6 +157,13 @@ export default async function CastMemberPage({ params }: Props) {
               careerStats.averagePowerRanking
             )}
           />
+        </div>
+
+        {/* Season Stats Chart Section */}
+        <div className="px-4 md:px-8 py-4 border-t border-secondary/30">
+          <div className="max-w-6xl mx-auto">
+            <SeasonStatsChartServer castMemberId={castMember.id} />
+          </div>
         </div>
       </div>
     </>
