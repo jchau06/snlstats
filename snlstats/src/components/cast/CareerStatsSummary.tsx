@@ -45,57 +45,57 @@ export function CareerStatsSummary({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Total Segments */}
           <div className="border border-secondary/50 px-6 py-6 rounded-sm bg-secondary/20">
-            <p className="stat-label text-xs uppercase mb-3 text-secondary/70">
+            <p className="stat-label text-xs uppercase mb-3 text-white/60">
               Total Segments
             </p>
-            <p className="font-mono text-3xl md:text-4xl font-bold text-tertiary">
+            <p className="font-mono text-3xl md:text-4xl font-bold text-white">
               {totalAppearances}
             </p>
           </div>
 
           {/* Segments Per Episode */}
           <div className="border border-secondary/50 px-6 py-6 rounded-sm bg-secondary/20">
-            <p className="stat-label text-xs uppercase mb-3 text-secondary/70">
+            <p className="stat-label text-xs uppercase mb-3 text-white/60">
               Segments / EP
             </p>
-            <p className="font-mono text-3xl md:text-4xl font-bold text-tertiary">
+            <p className="font-mono text-3xl md:text-4xl font-bold text-white">
               {averageAppearancesPerEp.toFixed(2)}
             </p>
           </div>
 
           {/* Live From New York's */}
           <div className="border border-secondary/50 px-6 py-6 rounded-sm bg-secondary/20">
-            <p className="stat-label text-xs uppercase mb-3 text-secondary/70">
+            <p className="stat-label text-xs uppercase mb-3 text-white/60">
               Live From NY's
             </p>
-            <p className="font-mono text-3xl md:text-4xl font-bold text-tertiary">
+            <p className="font-mono text-3xl md:text-4xl font-bold text-white">
               {totalLiveFromNewYorks}
             </p>
           </div>
 
           {/* Total Screen Time */}
           <div className="border border-secondary/50 px-6 py-6 rounded-sm bg-secondary/20">
-            <p className="stat-label text-xs uppercase mb-3 text-secondary/70">
+            <p className="stat-label text-xs uppercase mb-3 text-white/60">
               Total Screen Time
             </p>
-            <p className="font-mono text-3xl md:text-4xl font-bold text-tertiary">
+            <p className="font-mono text-3xl md:text-4xl font-bold text-white">
               {formatScreenTime(totalScreenTimeSeconds)}
             </p>
           </div>
 
           {/* Average Screen Time */}
           <div className="border border-secondary/50 px-6 py-6 rounded-sm bg-secondary/20">
-            <p className="stat-label text-xs uppercase mb-3 text-secondary/70">
+            <p className="stat-label text-xs uppercase mb-3 text-white/60">
               Avg Screen Time
             </p>
-            <p className="font-mono text-3xl md:text-4xl font-bold text-tertiary">
+            <p className="font-mono text-3xl md:text-4xl font-bold text-white">
               {formatScreenTime(averageScreenTimeSeconds)}
             </p>
           </div>
 
           {/* Average Power Ranking */}
           <div className="border border-secondary/50 px-6 py-6 rounded-sm bg-secondary/20">
-            <p className="stat-label text-xs uppercase mb-3 text-secondary/70">
+            <p className="stat-label text-xs uppercase mb-3 text-white/60">
               Avg Power Rank
             </p>
             <p className="font-mono text-3xl md:text-4xl font-bold text-primary">
