@@ -80,18 +80,37 @@ async function loadEpisodeData(filePath: string) {
 
     // Upsert cast members and their performance
     for (const perf of data.castPerformance) {
-      const castMember = await prisma.castMember.upsert({
+      // First, check if cast member exists
+      const existingMember = await prisma.castMember.findUnique({
         where: { name: perf.name },
-        create: {
-          name: perf.name,
-          slug: slugify(perf.name),
-          joinSeason: data.season,
-          status: "current",
-          headshot: `https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/cast/${slugify(perf.name)}.jpg`,
-        },
-        update: {
-          status: "current",
-        },
+      });
+
+      if (existingMember) {
+        // Cast member exists - DO NOT update joinSeason
+        // Only update status if needed (e.g., if they're appearing, they're still active)
+        await prisma.castMember.update({
+          where: { id: existingMember.id },
+          data: {
+            status: "current", // Mark as currently active
+            leaveSeason: null, // If they're performing, they haven't left
+          },
+        });
+      } else {
+        // New cast member - set joinSeason to current season
+        await prisma.castMember.create({
+          data: {
+            name: perf.name,
+            slug: slugify(perf.name),
+            joinSeason: data.season,
+            status: "current",
+            headshot: `https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/cast/${slugify(perf.name)}.jpg`,
+          },
+        });
+      }
+
+      // Get the cast member (now guaranteed to exist)
+      const castMember = await prisma.castMember.findUniqueOrThrow({
+        where: { name: perf.name },
       });
 
       // Upsert performance
@@ -108,17 +127,18 @@ async function loadEpisodeData(filePath: string) {
           screenTimeSeconds: perf.screenTimeSeconds,
           sketchCount: perf.sketchCount,
           powerRanking: perf.powerRanking,
+          status: perf.status || "present",
         },
         update: {
           screenTimeSeconds: perf.screenTimeSeconds,
           sketchCount: perf.sketchCount,
           powerRanking: perf.powerRanking,
+          status: perf.status || "present",
         },
       });
     }
 
     // Load LFNY data
-    // Load LFNY data - always create a record, even if empty
     const lfnyCastIds = await Promise.all(
       (data.liveFromNewYork || []).map(async (name) => {
         const member = await prisma.castMember.findUnique({
