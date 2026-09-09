@@ -1,0 +1,130 @@
+// scripts/generateCastMemberCareerStats.ts
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+async function generateCastMemberCareerStats() {
+  console.log("🚀 Starting CastMemberCareerStats generation...\n");
+
+  try {
+    // Get all cast members
+    const allCastMembers = await prisma.castMember.findMany();
+    console.log(`Found ${allCastMembers.length} cast members\n`);
+
+    let processed = 0;
+    let created = 0;
+
+    for (const castMember of allCastMembers) {
+      // Get all non-absent performances for this cast member
+      const performances = await prisma.castPerformance.findMany({
+        where: {
+          castMemberId: castMember.id,
+          status: { not: "absent" },
+        },
+        include: {
+          episode: {
+            select: {
+              seasonId: true,
+              episodeNumber: true,
+            },
+          },
+        },
+      });
+
+      if (performances.length === 0) {
+        console.log(`⏭️  ${castMember.name}: No performances (skipped)`);
+        processed++;
+        continue;
+      }
+
+      // Calculate career stats
+      const uniqueSeasons = new Set(
+        performances.map((p) => p.episode.seasonId)
+      );
+      const uniqueEpisodes = new Set(
+        performances.map((p) => p.episodeId)
+      );
+
+      const totalScreenTimeSeconds = performances.reduce(
+        (sum, p) => sum + p.screenTimeSeconds,
+        0
+      );
+      const totalAppearances = performances.reduce(
+        (sum, p) => sum + p.sketchCount,
+        0
+      );
+      const powerRankings = performances.map((p) => Number(p.powerRanking));
+      const averagePowerRanking =
+        powerRankings.reduce((sum, pr) => sum + pr, 0) /
+        powerRankings.length;
+
+      const totalEpisodes = uniqueEpisodes.size;
+      const averageScreenTimeSeconds =
+        totalScreenTimeSeconds / totalEpisodes;
+      const averageAppearancesPerEp = totalAppearances / totalEpisodes;
+
+      // Count LFNYs
+      const lfnyEpisodes = await prisma.liveFromNewYork.findMany({
+        where: {
+          castMemberIds: {
+            has: castMember.id,
+          },
+        },
+      });
+      const totalLiveFromNewYorks = lfnyEpisodes.length;
+
+      // Upsert career stats
+      await prisma.castMemberCareerStats.upsert({
+        where: { castMemberId: castMember.id },
+        create: {
+          castMemberId: castMember.id,
+          totalSeasons: uniqueSeasons.size,
+          totalEpisodes,
+          totalScreenTimeSeconds,
+          totalAppearances,
+          averageScreenTimeSeconds: parseFloat(
+            averageScreenTimeSeconds.toFixed(2)
+          ),
+          averageAppearancesPerEp: parseFloat(
+            averageAppearancesPerEp.toFixed(2)
+          ),
+          averagePowerRanking: parseFloat(averagePowerRanking.toFixed(2)),
+          totalLiveFromNewYorks,
+        },
+        update: {
+          totalSeasons: uniqueSeasons.size,
+          totalEpisodes,
+          totalScreenTimeSeconds,
+          totalAppearances,
+          averageScreenTimeSeconds: parseFloat(
+            averageScreenTimeSeconds.toFixed(2)
+          ),
+          averageAppearancesPerEp: parseFloat(
+            averageAppearancesPerEp.toFixed(2)
+          ),
+          averagePowerRanking: parseFloat(averagePowerRanking.toFixed(2)),
+          totalLiveFromNewYorks,
+        },
+      });
+
+      console.log(`✅ ${castMember.name}`);
+      console.log(
+        `   Seasons: ${uniqueSeasons.size} | Episodes: ${totalEpisodes} | Screen Time: ${(totalScreenTimeSeconds / 3600).toFixed(1)}h | Avg PWR Rank: ${averagePowerRanking.toFixed(2)} | LFNYs: ${totalLiveFromNewYorks}`
+      );
+
+      processed++;
+      created++;
+    }
+
+    console.log(
+      `\n✨ Complete! Processed: ${processed} | Created/Updated: ${created}`
+    );
+  } catch (error) {
+    console.error("❌ Error:", error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+generateCastMemberCareerStats();

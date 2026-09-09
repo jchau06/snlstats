@@ -12,15 +12,18 @@ model CastMember {
   name        String   @unique
   slug        String   @unique
   joinSeason  Int?
+  leaveSeason Int?        // null means current cast member
   status      String   @default("Repertory")
   headshot    String?
   createdAt   DateTime @default(now())
 
-  performances       CastPerformance[]
-  sketchAppearances  SketchAppearance[]
-  seasonStats        SeasonStats[]
-  seasonCast         SeasonCast[]
-  seasonMedia  SeasonCastMedia[]
+  performances         CastPerformance[]
+  sketchAppearances    SketchAppearance[]
+  seasonStats          SeasonStats[]
+  seasonCast           SeasonCast[]
+  seasonMedia          SeasonCastMedia[]
+  seasonLeaders        SeasonLeaders[]
+  careerStats          CastMemberCareerStats?
 
   @@index([slug])
   @@index([status])
@@ -38,7 +41,8 @@ model Season {
   episodes    Episode[]
   stats       SeasonStats[]
   castMembers SeasonCast[]
-  castMedia     SeasonCastMedia[]  
+  castMedia   SeasonCastMedia[]
+  leaders     SeasonLeaders[]
 
   @@index([seasonNumber])
 }
@@ -164,8 +168,8 @@ model SeasonCastMedia {
   id              String   @id @default(cuid())
   seasonId        String
   castMemberId    String
-  imageUrl        String   // Season opening photo or custom appearance image
-  imageType       String   @default("season-opening") // "season-opening", "promotional", etc.
+  imageUrl        String
+  imageType       String   @default("season-opening")
   createdAt       DateTime @default(now())
 
   season          Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
@@ -173,5 +177,46 @@ model SeasonCastMedia {
 
   @@unique([seasonId, castMemberId, imageType])
   @@index([seasonId])
+  @@index([castMemberId])
+}
+
+model SeasonLeaders {
+  id              String   @id @default(cuid())
+  seasonId        String
+  castMemberId    String
+  
+  isScreenTimeLeader    Boolean @default(false)
+  isSketchLeader        Boolean @default(false)
+  isPowerRankingLeader  Boolean @default(false)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  season          Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  castMember      CastMember @relation(fields: [castMemberId], references: [id], onDelete: Cascade)
+  
+  @@unique([seasonId, castMemberId])
+  @@index([seasonId])
+  @@index([castMemberId])
+}
+
+model CastMemberCareerStats {
+  id                       String   @id @default(cuid())
+  castMemberId             String   @unique
+  
+  totalSeasons             Int      @default(0)
+  totalEpisodes            Int      @default(0)
+  totalScreenTimeSeconds   Int      @default(0)
+  totalAppearances         Int      @default(0)
+  averageScreenTimeSeconds Decimal  @db.Decimal(8, 2)
+  averageAppearancesPerEp  Decimal  @db.Decimal(5, 2)
+  averagePowerRanking      Decimal  @db.Decimal(5, 2)
+  totalLiveFromNewYorks    Int      @default(0)
+  
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+  
+  castMember               CastMember @relation(fields: [castMemberId], references: [id], onDelete: Cascade)
+  
   @@index([castMemberId])
 }

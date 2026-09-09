@@ -11,7 +11,10 @@
     "load-data": "tsx scripts/loadEpisodeData.ts",
     "seed:cast": "tsx scripts/seed-season-cast.ts",
     "seed:media": "tsx scripts/seed-season-media.ts",
-    "seed:stats": "tsx scripts/generate-season-stats.ts"
+    "seed:stats": "tsx scripts/generate-season-stats.ts",
+    "seed:career-stats": "tsx scripts/generateAllStats.ts",
+    "seed:career-stats-only": "tsx scripts/generateCastMemberCareerStats.ts",
+    "seed:season-leaders-only": "tsx scripts/generateSeasonLeaders.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.15.0",
