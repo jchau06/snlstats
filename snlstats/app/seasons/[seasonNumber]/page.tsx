@@ -127,7 +127,9 @@ export default async function SeasonPage({ params }: Props) {
     screenTimeSeconds: perf.screenTimeSeconds || 0,
     sketchCount: perf.sketchCount || 0,
     powerRanking: Number(perf.powerRanking) || 0,
+    status: perf.status, // ADD THIS LINE
   }));
+
 
   // Transform episode data for EpisodeGrid
   const episodes = season.episodes.map((ep) => ({

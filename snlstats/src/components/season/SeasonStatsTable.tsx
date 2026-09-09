@@ -13,11 +13,12 @@ interface CastPerformanceRecord {
   screenTimeSeconds: number;
   sketchCount: number;
   powerRanking: number;
+  status?: string;
 }
 
 interface SeasonStatsTableProps {
   performanceData: CastPerformanceRecord[];
-  lfnyCountByEpisode?: { [episodeNumber: number]: string[] }; // episode -> castMemberIds
+  lfnyCountByEpisode?: { [episodeNumber: number]: string[] };
   totalEpisodes?: number;
   backgroundImage?: string;
   className?: string;
@@ -29,6 +30,7 @@ type SortKey =
   | "sketchCount"
   | "powerRanking"
   | "lfnyCount";
+
 type StatMode = "totals" | "averages";
 
 export function SeasonStatsTable({
@@ -48,20 +50,27 @@ export function SeasonStatsTable({
 
   // Get unique cast members and aggregate data for the selected episode range
   const aggregatedData = useMemo(() => {
-    const castMap: { [castMemberId: string]: {
-      name: string;
-      slug: string;
-      headshot?: string;
-      screenTimeSeconds: number;
-      sketchCount: number;
-      powerRankings: number[];
-      episodesAppeared: number;
-    } } = {};
+    const castMap: {
+      [castMemberId: string]: {
+        name: string;
+        slug: string;
+        headshot?: string;
+        screenTimeSeconds: number;
+        sketchCount: number;
+        powerRankings: number[];
+        episodesAppeared: number;
+      };
+    } = {};
 
-    // Filter performance data by episode range
-    const rangeData = performanceData.filter(
-      (perf) => perf.episodeNumber >= episodeStart && perf.episodeNumber <= episodeEnd
-    );
+    // Filter performance data by episode range and exclude "absent" status
+    const rangeData = performanceData.filter((perf) => {
+      const status = perf.status;
+      return (
+        perf.episodeNumber >= episodeStart &&
+        perf.episodeNumber <= episodeEnd &&
+        status !== "absent"
+      );
+    });
 
     // Aggregate by cast member
     rangeData.forEach((perf) => {
@@ -77,18 +86,24 @@ export function SeasonStatsTable({
         };
       }
 
-      castMap[perf.castMemberId].screenTimeSeconds += perf.screenTimeSeconds;
+      castMap[perf.castMemberId].screenTimeSeconds +=
+        perf.screenTimeSeconds;
+
       castMap[perf.castMemberId].sketchCount += perf.sketchCount;
+
       castMap[perf.castMemberId].powerRankings.push(perf.powerRanking);
+
       castMap[perf.castMemberId].episodesAppeared += 1;
     });
 
     return Object.entries(castMap).map(([castMemberId, data]) => ({
       castMemberId,
       ...data,
-      avgPowerRanking: data.powerRankings.length > 0
-        ? data.powerRankings.reduce((a, b) => a + b, 0) / data.powerRankings.length
-        : 0,
+      avgPowerRanking:
+        data.powerRankings.length > 0
+          ? data.powerRankings.reduce((a, b) => a + b, 0) /
+            data.powerRankings.length
+          : 0,
     }));
   }, [performanceData, episodeStart, episodeEnd]);
 
@@ -98,6 +113,7 @@ export function SeasonStatsTable({
 
     for (let ep = episodeStart; ep <= episodeEnd; ep++) {
       const castMemberIds = lfnyCountByEpisode[ep] || [];
+
       castMemberIds.forEach((castMemberId) => {
         count[castMemberId] = (count[castMemberId] || 0) + 1;
       });
@@ -175,12 +191,13 @@ export function SeasonStatsTable({
     const secs = seconds % 60;
 
     if (hours > 0) {
-      return `${hours}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+      return `${hours}:${String(minutes).padStart(2, "0")}:${String(
+        secs,
+      ).padStart(2, "0")}`;
     }
+
     return `${minutes}:${String(secs).padStart(2, "0")}`;
   };
-
-  const numEpisodesInRange = episodeEnd - episodeStart + 1;
 
   const tableData = sortedData.map((member, idx) => {
     let displayScreenTime = member.screenTimeSeconds;
@@ -190,14 +207,24 @@ export function SeasonStatsTable({
 
     // If in averages mode, divide by episodes appeared
     if (statMode === "averages" && member.episodesAppeared > 0) {
-      displayScreenTime = Math.round(displayScreenTime / member.episodesAppeared);
-      displaySketchCount = displaySketchCount / member.episodesAppeared;
+      displayScreenTime = Math.round(
+        displayScreenTime / member.episodesAppeared,
+      );
+
+      displaySketchCount =
+        displaySketchCount / member.episodesAppeared;
+
       displayPowerRanking = displayPowerRanking; // Already averaged
-      displayLfny = Math.round(displayLfny / member.episodesAppeared);
+
+      displayLfny = displayLfny / member.episodesAppeared;
     }
 
     return {
-      rank: String(sortOrder === "desc" ? idx + 1 : aggregatedData.length - idx),
+      rank: String(
+        sortOrder === "desc"
+          ? idx + 1
+          : aggregatedData.length - idx,
+      ),
 
       castMember: (
         <div className="flex items-center gap-3">
@@ -226,6 +253,8 @@ export function SeasonStatsTable({
         </div>
       ),
 
+      episodesAppeared: String(member.episodesAppeared),
+
       screenTime: formatScreenTime(displayScreenTime),
 
       sketchCount:
@@ -235,7 +264,10 @@ export function SeasonStatsTable({
 
       powerRanking: Number(displayPowerRanking).toFixed(1),
 
-      lfnyCount: String(displayLfny),
+      lfnyCount:
+        statMode === "averages"
+          ? Number(displayLfny).toFixed(2)
+          : String(Math.round(displayLfny)),
     };
   });
 
@@ -269,37 +301,119 @@ export function SeasonStatsTable({
             {/* Episode Range */}
             <div className="flex items-center gap-2 text-xs sm:text-sm">
               <span className="text-[#B4B2A9]">FROM EP</span>
-              <input
-                type="number"
-                min="1"
-                max={totalEpisodes}
-                value={episodeStart}
-                onChange={(e) =>
-                  setEpisodeStart(
-                    Math.min(
-                      Number(e.target.value),
+
+              {/* FROM EP */}
+              <div className="relative">
+                <input
+                  type="number"
+                  value={episodeStart}
+                  onChange={(e) => {
+                    const val = Math.min(
+                      Math.max(1, Number(e.target.value)),
                       episodeEnd,
-                    ),
-                  )
-                }
-                className="w-12 bg-black/40 border border-[#2C2C2A] rounded px-2 py-1 text-primary focus:border-primary focus:outline-none"
-              />
+                    );
+
+                    setEpisodeStart(val);
+                  }}
+                  min={1}
+                  max={episodeEnd}
+                  className="w-16 h-[38px] bg-black/40 border border-[#2C2C2A] rounded px-2 pr-5 text-center text-primary focus:outline-none font-semibold transition-colors duration-base hover:border-primary focus:border-primary appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                />
+
+                {/* Spinner Buttons */}
+                <div className="absolute right-1 top-1/2 -translate-y-1/2 flex flex-col">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEpisodeStart((current) =>
+                        Math.min(current + 1, episodeEnd),
+                      );
+                    }}
+                    disabled={episodeStart >= episodeEnd}
+                    aria-label="Increase starting episode"
+                    className="w-4 h-4 flex items-center justify-center text-primary hover:text-tertiary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <span className="text-[10px] leading-none">
+                      ▲
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEpisodeStart((current) =>
+                        Math.max(current - 1, 1),
+                      );
+                    }}
+                    disabled={episodeStart <= 1}
+                    aria-label="Decrease starting episode"
+                    className="w-4 h-4 flex items-center justify-center text-primary hover:text-tertiary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <span className="text-[10px] leading-none">
+                      ▼
+                    </span>
+                  </button>
+                </div>
+              </div>
+
               <span className="text-[#B4B2A9]">TO EP</span>
-              <input
-                type="number"
-                min={episodeStart}
-                max={totalEpisodes}
-                value={episodeEnd}
-                onChange={(e) =>
-                  setEpisodeEnd(
-                    Math.max(
-                      Number(e.target.value),
-                      episodeStart,
-                    ),
-                  )
-                }
-                className="w-12 bg-black/40 border border-[#2C2C2A] rounded px-2 py-1 text-primary focus:border-primary focus:outline-none"
-              />
+
+              {/* TO EP */}
+              <div className="relative">
+                <input
+                  type="number"
+                  value={episodeEnd}
+                  onChange={(e) => {
+                    const val = Math.min(
+                      totalEpisodes,
+                      Math.max(
+                        episodeStart,
+                        Number(e.target.value),
+                      ),
+                    );
+
+                    setEpisodeEnd(val);
+                  }}
+                  min={episodeStart}
+                  max={totalEpisodes}
+                  className="w-16 h-[38px] bg-black/40 border border-[#2C2C2A] rounded px-2 pr-5 text-center text-primary focus:outline-none font-semibold transition-colors duration-base hover:border-primary focus:border-primary appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                />
+
+                {/* Spinner Buttons */}
+                <div className="absolute right-1 top-1/2 -translate-y-1/2 flex flex-col">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEpisodeEnd((current) =>
+                        Math.min(current + 1, totalEpisodes),
+                      );
+                    }}
+                    disabled={episodeEnd >= totalEpisodes}
+                    aria-label="Increase ending episode"
+                    className="w-4 h-4 flex items-center justify-center text-primary hover:text-tertiary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <span className="text-[10px] leading-none">
+                      ▲
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEpisodeEnd((current) =>
+                        Math.max(current - 1, episodeStart),
+                      );
+                    }}
+                    disabled={episodeEnd <= episodeStart}
+                    aria-label="Decrease ending episode"
+                    className="w-4 h-4 flex items-center justify-center text-primary hover:text-tertiary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <span className="text-[10px] leading-none">
+                      ▼
+                    </span>
+                  </button>
+                </div>
+              </div>
             </div>
 
             {/* Totals/Averages Toggle */}
@@ -314,6 +428,7 @@ export function SeasonStatsTable({
               >
                 TOTALS
               </button>
+
               <button
                 onClick={() => setStatMode("averages")}
                 className={`px-3 py-1 text-sm font-semibold rounded transition-colors duration-base ${
@@ -340,6 +455,12 @@ export function SeasonStatsTable({
             {
               key: "castMember",
               label: "Cast Member",
+              sortable: false,
+            },
+            {
+              key: "episodesAppeared",
+              label: "Episodes",
+              align: "right",
               sortable: false,
             },
             {
@@ -381,7 +502,9 @@ export function SeasonStatsTable({
               onClick={() => setShowAll(!showAll)}
               className="text-primary hover:text-tertiary font-sans font-semibold transition-colors duration-base"
             >
-              {showAll ? "See top 5" : `See all ${aggregatedData.length} members`}
+              {showAll
+                ? "See top 5"
+                : `See all ${aggregatedData.length} members`}
             </button>
           </div>
         )}
