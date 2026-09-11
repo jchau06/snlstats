@@ -1,6 +1,6 @@
 // src/components/cast/SeasonStatsChartServer.tsx
 import { prisma } from "@/src/lib/prisma";
-import { SeasonStatsChartClient } from "./SeasonStatsChart";
+import { SeasonStatsChartClient } from "./SeasonStatsChartClient";
 
 interface SeasonStatsChartServerProps {
   castMemberId: string;
@@ -54,6 +54,10 @@ export async function SeasonStatsChartServer({
         yearStarted: stat.season.yearStarted,
         yearEnded: stat.season.yearEnded,
         totalScreenTimeSeconds: stat.totalScreenTimeSeconds,
+        totalAppearances: stat.totalAppearances,
+        averageScreenTimeSeconds: Number(stat.averageScreenTimeSeconds),
+        averageAppearances: Number(stat.averageAppearances),
+        powerRankingSeason: Number(stat.powerRankingSeason),
         castMembersInSeason: allSeasonStats.length,
         castMemberRankInSeason: rank,
       };
