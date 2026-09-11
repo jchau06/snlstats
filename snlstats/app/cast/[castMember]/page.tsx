@@ -5,6 +5,7 @@ import { Header } from "@/src/components/ui/Header";
 import { CastMemberHeroSection } from "@/src/components/cast/CastMemberHeroSection";
 import { CareerStatsSummary } from "@/src/components/cast/CareerStatsSummary";
 import { SeasonStatsChartServer } from "@/src/components/cast/SeasonStatsChartServer";
+import { SeasonBySeasonTableServer } from "@/src/components/cast/SeasonBySeasonTableServer";
 
 interface Props {
   params: Promise<{
@@ -163,6 +164,13 @@ export default async function CastMemberPage({ params }: Props) {
         <div className="px-4 md:px-8 py-4 border-t border-secondary/30">
           <div className="max-w-6xl mx-auto">
             <SeasonStatsChartServer castMemberId={castMember.id} />
+          </div>
+        </div>
+
+        {/* Season-by-Season Table Section */}
+        <div className="px-4 md:px-8 py-4 border-t border-secondary/30">
+          <div className="max-w-6xl mx-auto">
+            <SeasonBySeasonTableServer castMemberId={castMember.id} castMemberSlug={castMember.slug} />
           </div>
         </div>
       </div>
