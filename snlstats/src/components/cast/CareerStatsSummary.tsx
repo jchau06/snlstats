@@ -12,11 +12,11 @@ interface CareerStatsSummaryProps {
   className?: string;
 }
 
-// Format seconds to HH:MM:SS (only show hours if > 0)
+// Format seconds to MM:SS (rounded to nearest second)
 function formatScreenTime(seconds: number): string {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
-  const secs = Math.floor(seconds % 60);
+  const secs = Math.round(seconds % 60);
 
   if (hours > 0) {
     return `${hours}H ${minutes}M`;
