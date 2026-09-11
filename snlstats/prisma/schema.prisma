@@ -154,8 +154,6 @@ model SeasonStats {
   averageAppearances       Decimal  @db.Decimal(5, 2)
   powerRankingSeason       Decimal  @db.Decimal(5, 2)
   
-  role                     String   @default("Repertory")
-  
   createdAt                DateTime @default(now())
   updatedAt                DateTime @updatedAt
 
