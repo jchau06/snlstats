@@ -149,9 +149,12 @@ model SeasonStats {
   
   totalScreenTimeSeconds   Int      @default(0)
   totalAppearances         Int      @default(0)
+  episodesPresent          Int      @default(0)
   averageScreenTimeSeconds Decimal  @db.Decimal(8, 2)
   averageAppearances       Decimal  @db.Decimal(5, 2)
   powerRankingSeason       Decimal  @db.Decimal(5, 2)
+  
+  role                     String   @default("Repertory")
   
   createdAt                DateTime @default(now())
   updatedAt                DateTime @updatedAt

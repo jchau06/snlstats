@@ -25,6 +25,18 @@ async function generateSeasonStats(seasonNumber: number) {
 
   console.log(`Found ${performances.length} performances`);
 
+  // Get season cast info for roles
+  const seasonCast = await prisma.seasonCast.findMany({
+    where: { seasonId: season.id },
+    include: { castMember: true },
+  });
+
+  // Map castMemberId to role
+  const roleMap = new Map<string, string>();
+  seasonCast.forEach((sc) => {
+    roleMap.set(sc.castMemberId, sc.status || "Repertory");
+  });
+
   // Group by cast member and calculate aggregates
   const statsByMember = new Map<
     string,
@@ -33,7 +45,8 @@ async function generateSeasonStats(seasonNumber: number) {
       totalScreenTime: number;
       totalAppearances: number;
       powerRankings: number[];
-      episodesPresent: number; // ← Track number of present episodes
+      episodesPresent: number;
+      role: string;
     }
   >();
 
@@ -45,7 +58,8 @@ async function generateSeasonStats(seasonNumber: number) {
         totalScreenTime: 0,
         totalAppearances: 0,
         powerRankings: [],
-        episodesPresent: 0, // ← Initialize counter
+        episodesPresent: 0,
+        role: roleMap.get(key) || "Repertory",
       });
     }
 
@@ -53,7 +67,7 @@ async function generateSeasonStats(seasonNumber: number) {
     stats.totalScreenTime += perf.screenTimeSeconds;
     stats.totalAppearances += perf.sketchCount;
     stats.powerRankings.push(Number(perf.powerRanking));
-    stats.episodesPresent += 1; // ← Increment for each present episode
+    stats.episodesPresent += 1;
   });
 
   // Create or update SeasonStats
@@ -80,18 +94,22 @@ async function generateSeasonStats(seasonNumber: number) {
       update: {
         totalScreenTimeSeconds: stats.totalScreenTime,
         totalAppearances: stats.totalAppearances,
+        episodesPresent: stats.episodesPresent,
         averageScreenTimeSeconds: avgScreenTime,
         averageAppearances: avgAppearances,
         powerRankingSeason: avgPowerRanking,
+        role: stats.role,
       },
       create: {
         seasonId: season.id,
         castMemberId,
         totalScreenTimeSeconds: stats.totalScreenTime,
         totalAppearances: stats.totalAppearances,
+        episodesPresent: stats.episodesPresent,
         averageScreenTimeSeconds: avgScreenTime,
         averageAppearances: avgAppearances,
         powerRankingSeason: avgPowerRanking,
+        role: stats.role,
       },
     });
 
