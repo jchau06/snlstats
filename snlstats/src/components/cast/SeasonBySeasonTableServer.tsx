@@ -13,7 +13,7 @@ export async function SeasonBySeasonTableServer({
   castMemberSlug,
   className,
 }: SeasonBySeasonTableServerProps) {
-  // Fetch all season stats for this cast member with season details
+  // Fetch all season stats for this cast member with season and role details
   const seasonStats = await prisma.seasonStats.findMany({
     where: { castMemberId },
     include: {
@@ -32,18 +32,32 @@ export async function SeasonBySeasonTableServer({
     return null;
   }
 
-  // Transform to client format
-  const data = seasonStats.map((stat) => ({
-    seasonNumber: stat.season.seasonNumber,
-    yearStarted: stat.season.yearStarted,
-    yearEnded: stat.season.yearEnded,
-    numEpisodes: stat.season.numEpisodes,
-    role: stat.role || "Repertory",
-    totalAppearances: stat.totalAppearances,
-    totalScreenTimeSeconds: stat.totalScreenTimeSeconds,
-    averageScreenTimeSeconds: Number(stat.averageScreenTimeSeconds),
-    powerRankingSeason: Number(stat.powerRankingSeason),
-  }));
+  // For each season stat, fetch the corresponding SeasonCast for role
+  const data = await Promise.all(
+    seasonStats.map(async (stat) => {
+      const seasonCast = await prisma.seasonCast.findUnique({
+        where: {
+          seasonId_castMemberId: {
+            seasonId: stat.seasonId,
+            castMemberId,
+          },
+        },
+        select: { status: true },
+      });
+
+      return {
+        seasonNumber: stat.season.seasonNumber,
+        yearStarted: stat.season.yearStarted,
+        yearEnded: stat.season.yearEnded,
+        numEpisodes: stat.season.numEpisodes,
+        role: seasonCast?.status || "Repertory",
+        totalAppearances: stat.totalAppearances,
+        totalScreenTimeSeconds: stat.totalScreenTimeSeconds,
+        averageScreenTimeSeconds: Number(stat.averageScreenTimeSeconds),
+        powerRankingSeason: Number(stat.powerRankingSeason),
+      };
+    })
+  );
 
   return (
     <div className={className}>
