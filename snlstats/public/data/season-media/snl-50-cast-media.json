@@ -1,0 +1,91 @@
+{
+  "seasonNumber": 50,
+  "heroImageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/snl-50-cast-photo.jpg",
+  "seasonOpening": [
+    {
+      "castMemberName": "Michael Che",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/michael-che-opening.jpg"
+    },
+    {
+      "castMemberName": "Mikey Day",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/mikey-day-opening-jpg.jpg"
+    },
+    {
+      "castMemberName": "Andrew Dismukes",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/andrew-dismukes-opening.jpg"
+    },
+    {
+      "castMemberName": "Chloe Fineman",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/chloe-fineman-opening.jpg"
+    },
+    {
+      "castMemberName": "Heidi Gardner",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/heidi-gardner-opening.png"
+    },
+    {
+      "castMemberName": "Marcello Hernandez",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/marcello-hernandez-opening.png"
+    },
+    {
+      "castMemberName": "James Austin Johnson",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/james-austin-johnson-opening.jpg"
+    },
+    {
+      "castMemberName": "Colin Jost",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/colin-jost-opening.jpg"
+    },
+    {
+      "castMemberName": "Michael Longfellow",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/michael-longfellow-opening.jpg"
+    },
+    {
+      "castMemberName": "Ego Nwodim",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/ego-nwodim-opening.jpg"
+    },
+    {
+      "castMemberName": "Sarah Sherman",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/sarah-sherman-opening.png"
+    },
+    {
+      "castMemberName": "Kenan Thompson",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/kenan-thompson-opening.png"
+    },
+    {
+      "castMemberName": "Devon Walker",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/devon-walker-opening.jpg"
+    },
+    {
+      "castMemberName": "Bowen Yang",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/bowen-yang-opening.png"
+    },
+    {
+      "castMemberName": "Ashley Padilla",
+      "status": "featured",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/ashley-padilla-opening.png"
+    },
+    {
+      "castMemberName": "Emil Wakim",
+      "status": "featured",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/emil-wakim-opening.png"
+    },
+    {
+      "castMemberName": "Jane Wickline",
+      "status": "featured",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-50-media/jane-wickline-opening.png"
+    }
+  ]
+}
