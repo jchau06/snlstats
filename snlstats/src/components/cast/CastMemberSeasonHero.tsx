@@ -3,51 +3,60 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface CastMemberSeasonHeroProps {
   name: string;
   seasonImage?: string;
-  totalSeasons: number;
-  careerSpan: string; // e.g., "2003 - Present"
+  castMemberSlug: string;
+  seasonNumber: number;
+  seasonYears: string; // e.g., "2025-2026"
+  joinSeason: number; // e.g., 50
+  currentSeasonNumber: number; // e.g., 51
+  careerSpan: string; // e.g., "Season 50 - Present"
   episodesPresent: number;
   totalEpisodesInSeason: number;
-  screenTimeRanking: number | null; // #1, #2, etc. or null if not a leader
-  sketchRanking: number | null;
+  screenTimeRanking: number | null;
+  segmentRanking: number | null;
   powerRanking: number | null;
-  role: string;
   className?: string;
 }
+
+// Calculate which season of their career this is
+const getSeasonOrdinal = (joinSeason: number, currentSeasonNumber: number): string => {
+  const seasonCount = currentSeasonNumber - joinSeason + 1;
+  const suffix = seasonCount === 1 ? "st" : seasonCount === 2 ? "nd" : seasonCount === 3 ? "rd" : "th";
+  return `${seasonCount}${suffix}`;
+};
+
+const renderRankingBox = (label: string, ranking: number | null) => {
+  return (
+    <div className="border border-secondary/50 px-4 py-4 rounded-sm bg-secondary/20">
+      <p className="stat-label text-xs uppercase mb-2 text-white/60">{label}</p>
+      <p className="font-mono text-2xl font-bold text-primary">
+        #{ranking || "—"}
+      </p>
+    </div>
+  );
+};
 
 export function CastMemberSeasonHero({
   name,
   seasonImage,
-  totalSeasons,
+  castMemberSlug,
+  seasonNumber,
+  seasonYears,
+  joinSeason,
+  currentSeasonNumber,
   careerSpan,
   episodesPresent,
   totalEpisodesInSeason,
   screenTimeRanking,
-  sketchRanking,
+  segmentRanking,
   powerRanking,
-  role,
   className = "",
 }: CastMemberSeasonHeroProps) {
-  const renderRankingBox = (label: string, ranking: number | null) => {
-    if (ranking === null) return null;
-
-    const isLeader = ranking === 1;
-    const textColor = isLeader ? "text-primary" : "text-tertiary";
-
-    return (
-      <div className="border border-secondary/50 px-4 py-3 rounded-sm bg-secondary/20">
-        <p className="stat-label text-xs uppercase mb-2 text-white/60">
-          {label}
-        </p>
-        <p className={`font-mono text-lg font-bold ${textColor}`}>
-          {isLeader ? "YES (RANK #1)" : `RANK #${ranking}`}
-        </p>
-      </div>
-    );
-  };
+  const seasonOrdinal = getSeasonOrdinal(joinSeason, currentSeasonNumber);
 
   return (
     <div
@@ -73,20 +82,26 @@ export function CastMemberSeasonHero({
           {/* Right: Info + Stats */}
           <div className="flex-1 flex flex-col justify-start">
             {/* Back Navigation + Context */}
-            <div className="mb-6">
-              <a
-                href="#"
-                className="text-primary hover:text-tertiary transition-colors text-sm font-mono uppercase mb-3 inline-block"
+            <div className="mb-8">
+              <Link
+                href={`/cast/${castMemberSlug}`}
+                className="text-primary hover:text-tertiary transition-colors text-sm font-mono uppercase mb-4 inline-block"
               >
                 ← Back to Career Stats
-              </a>
-              <div className="space-y-2">
-                <p className="stat-label text-xs uppercase text-secondary/70">
-                  Season Focus (2025-2026)
-                </p>
-                <p className="stat-label text-xs uppercase text-secondary/70">
-                  {careerSpan} (Veteran)
-                </p>
+              </Link>
+
+              {/* Stylized Flags */}
+              <div className="flex flex-wrap gap-3 mb-4">
+                <div className="bg-primary/20 border border-primary px-4 py-2 rounded-sm">
+                  <span className="font-mono text-sm font-bold text-primary uppercase">
+                    Season {seasonNumber} Profile - {seasonYears}
+                  </span>
+                </div>
+                <div className="bg-secondary/40 border border-secondary/60 px-4 py-2 rounded-sm">
+                  <span className="font-mono text-sm font-bold text-tertiary uppercase">
+                    {careerSpan}
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -95,15 +110,15 @@ export function CastMemberSeasonHero({
               {name}
             </h1>
 
-            {/* Season Highlights Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-              {/* Total Seasons */}
+            {/* Season Highlights Grid - All same size */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {/* Season Ordinal */}
               <div className="border border-secondary/50 px-4 py-4 rounded-sm bg-secondary/20">
                 <p className="stat-label text-xs uppercase mb-2 text-white/60">
-                  Total Seasons
+                  Career Season
                 </p>
                 <p className="font-mono text-2xl font-bold text-white">
-                  {totalSeasons}
+                  {seasonOrdinal}
                 </p>
               </div>
 
@@ -117,37 +132,13 @@ export function CastMemberSeasonHero({
                 </p>
               </div>
 
-              {/* Rankings - Conditional Rendering */}
-              {(screenTimeRanking || sketchRanking || powerRanking) && (
-                <div className="col-span-2 md:col-span-1 border border-primary/40 px-4 py-4 rounded-sm bg-primary/5">
-                  <p className="stat-label text-xs uppercase mb-3 text-primary">
-                    Season Rankings
-                  </p>
-                  <div className="space-y-1">
-                    {screenTimeRanking && (
-                      <p className="font-mono text-xs text-primary">
-                        Screen Time: #{screenTimeRanking}
-                      </p>
-                    )}
-                    {sketchRanking && (
-                      <p className="font-mono text-xs text-primary">
-                        Sketch: #{sketchRanking}
-                      </p>
-                    )}
-                    {powerRanking && (
-                      <p className="font-mono text-xs text-primary">
-                        Power: #{powerRanking}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Detailed Rankings */}
-            <div className="space-y-3">
+              {/* Screen Time Ranking */}
               {renderRankingBox("Screen Time Ranking", screenTimeRanking)}
-              {renderRankingBox("Sketch Ranking", sketchRanking)}
+
+              {/* Segment Ranking */}
+              {renderRankingBox("Segment Ranking", segmentRanking)}
+
+              {/* Power Ranking */}
               {renderRankingBox("Power Ranking", powerRanking)}
             </div>
           </div>

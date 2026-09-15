@@ -9,6 +9,8 @@ interface SeasonStatsSummaryProps {
   totalScreenTimeSeconds: number;
   averageScreenTimeSeconds: number;
   averagePowerRanking: number;
+  lfnyCount?: number;
+  seasonNumber?: number;
   className?: string;
 }
 
@@ -30,6 +32,8 @@ export function SeasonStatsSummary({
   totalScreenTimeSeconds,
   averageScreenTimeSeconds,
   averagePowerRanking,
+  lfnyCount = 0,
+  seasonNumber,
   className = "",
 }: SeasonStatsSummaryProps) {
   return (
@@ -37,7 +41,7 @@ export function SeasonStatsSummary({
       <div className="max-w-6xl mx-auto px-4 md:px-8">
         {/* Section Header */}
         <h2 className="font-heading text-4xl md:text-5xl font-bold text-tertiary mb-8">
-          Season 51 Stats
+          {seasonNumber ? `Season ${seasonNumber} Stats` : "Season Stats"}
         </h2>
 
         {/* Stats Grid - 2-3 columns responsive */}
@@ -62,13 +66,13 @@ export function SeasonStatsSummary({
             </p>
           </div>
 
-          {/* Cold Opens (placeholder - can be replaced with actual data) */}
+          {/* Live From New York's */}
           <div className="border border-secondary/50 px-6 py-6 rounded-sm bg-secondary/20">
             <p className="stat-label text-xs uppercase mb-3 text-white/60">
-              Cold Opens
+              Live From NY's
             </p>
             <p className="font-mono text-3xl md:text-4xl font-bold text-white">
-              —
+              {lfnyCount}
             </p>
           </div>
 

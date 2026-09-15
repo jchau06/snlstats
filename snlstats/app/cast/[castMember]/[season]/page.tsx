@@ -14,7 +14,6 @@ interface Props {
 
 export async function generateStaticParams() {
   // Generate all combinations of cast members and seasons
-  const castMembers = await prisma.castMember.findMany();
   const seasonStats = await prisma.seasonStats.findMany({
     select: {
       season: { select: { seasonNumber: true, yearStarted: true, yearEnded: true } },
@@ -22,10 +21,23 @@ export async function generateStaticParams() {
     },
   });
 
-  return seasonStats.map((stat) => ({
-    castMember: stat.castMemberId, // Will need to get slug instead
-    season: `${stat.season.yearStarted}-${stat.season.yearEnded}`,
-  }));
+  // Map castMemberId to slug
+  const castMembers = await prisma.castMember.findMany({
+    select: { id: true, slug: true },
+  });
+
+  const castMemberMap = new Map(castMembers.map((cm) => [cm.id, cm.slug]));
+
+  return seasonStats
+    .map((stat) => {
+      const slug = castMemberMap.get(stat.castMemberId);
+      if (!slug) return null;
+      return {
+        castMember: slug,
+        season: `${stat.season.yearStarted}-${stat.season.yearEnded}`,
+      };
+    })
+    .filter((item) => item !== null);
 }
 
 export default async function CastMemberSeasonPage({ params }: Props) {
@@ -42,7 +54,7 @@ export default async function CastMemberSeasonPage({ params }: Props) {
     where: { slug: castMemberSlug },
   });
 
-  if (!castMember) {
+  if (!castMember || !castMember.joinSeason) {
     notFound();
   }
 
@@ -58,7 +70,7 @@ export default async function CastMemberSeasonPage({ params }: Props) {
     notFound();
   }
 
-  // Fetch career stats for total seasons and span
+  // Fetch career stats for career span
   const careerStats = await prisma.castMemberCareerStats.findUnique({
     where: { castMemberId: castMember.id },
   });
@@ -83,9 +95,22 @@ export default async function CastMemberSeasonPage({ params }: Props) {
 
   // Format career span
   const careerSpan =
-    careerStats.yearLeft && careerStats.yearLeft !== season.yearEnded
-      ? `${careerStats.yearJoined} - ${careerStats.yearLeft}`
-      : `${careerStats.yearJoined} - Present`;
+    castMember.leaveSeason && castMember.leaveSeason !== season.yearEnded
+      ? `Season ${castMember.joinSeason} - ${castMember.leaveSeason}`
+      : `Season ${castMember.joinSeason} - Present`;
+
+  const seasonYears = `${season.yearStarted}-${season.yearEnded}`;
+
+  // Fetch LFNY count for this season
+  const lfnyData = await prisma.liveFromNewYork.findMany({
+    where: {
+      episode: { seasonId: season.id },
+      castMemberIds: {
+        has: castMember.id,
+      },
+    },
+  });
+  const lfnyCount = lfnyData.length;
 
   return (
     <>
@@ -95,9 +120,11 @@ export default async function CastMemberSeasonPage({ params }: Props) {
         <CastMemberSeasonHeroServer
           castMemberId={castMember.id}
           castMemberName={castMember.name}
-          totalSeasons={careerStats.totalSeasons}
-          careerSpan={careerSpan}
+          castMemberSlug={castMember.slug}
+          castMemberJoinSeason={castMember.joinSeason}
           seasonNumber={season.seasonNumber}
+          seasonYears={seasonYears}
+          careerSpan={careerSpan}
         />
 
         {/* Season Stats Section */}
@@ -109,6 +136,8 @@ export default async function CastMemberSeasonPage({ params }: Props) {
               totalScreenTimeSeconds={seasonStats.totalScreenTimeSeconds}
               averageScreenTimeSeconds={Number(seasonStats.averageScreenTimeSeconds)}
               averagePowerRanking={Number(seasonStats.powerRankingSeason)}
+              lfnyCount={lfnyCount}
+              seasonNumber={season.seasonNumber}
             />
           </div>
         </div>

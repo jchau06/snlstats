@@ -5,18 +5,22 @@ import { CastMemberSeasonHero } from "./CastMemberSeasonHero";
 interface CastMemberSeasonHeroServerProps {
   castMemberId: string;
   castMemberName: string;
-  totalSeasons: number;
-  careerSpan: string;
+  castMemberSlug: string;
+  castMemberJoinSeason: number;
   seasonNumber: number;
+  seasonYears: string;
+  careerSpan: string;
   className?: string;
 }
 
 export async function CastMemberSeasonHeroServer({
   castMemberId,
   castMemberName,
-  totalSeasons,
-  careerSpan,
+  castMemberSlug,
+  castMemberJoinSeason,
   seasonNumber,
+  seasonYears,
+  careerSpan,
   className,
 }: CastMemberSeasonHeroServerProps) {
   // Fetch season
@@ -36,17 +40,6 @@ export async function CastMemberSeasonHeroServer({
         castMemberId,
       },
     },
-  });
-
-  // Fetch season cast for role
-  const seasonCast = await prisma.seasonCast.findUnique({
-    where: {
-      seasonId_castMemberId: {
-        seasonId: season.id,
-        castMemberId,
-      },
-    },
-    select: { status: true },
   });
 
   // Fetch season opening image
@@ -73,25 +66,38 @@ export async function CastMemberSeasonHeroServer({
     },
   });
 
-  // Determine rankings (if cast member is a leader in a category, their ranking is #1)
-  // Otherwise, we'd need to query all seasonStats for the season to get the ranking
-  // For now, we'll show rankings only if they're leaders (#1)
-  const screenTimeRanking = seasonLeader?.isScreenTimeLeader ? 1 : null;
-  const sketchRanking = seasonLeader?.isSketchLeader ? 1 : null;
-  const powerRanking = seasonLeader?.isPowerRankingLeader ? 1 : null;
+  // Get all season stats to calculate rankings for this cast member
+  const allSeasonStats = await prisma.seasonStats.findMany({
+    where: { seasonId: season.id },
+    orderBy: { totalScreenTimeSeconds: "desc" },
+  });
+
+  // Calculate screen time ranking
+  const screenTimeRank = allSeasonStats.findIndex((s) => s.castMemberId === castMemberId) + 1;
+
+  // For segment ranking, sort by totalAppearances
+  const segmentStats = [...allSeasonStats].sort((a, b) => b.totalAppearances - a.totalAppearances);
+  const segmentRank = segmentStats.findIndex((s) => s.castMemberId === castMemberId) + 1;
+
+  // For power ranking, sort by powerRankingSeason
+  const powerStats = [...allSeasonStats].sort((a, b) => Number(b.powerRankingSeason) - Number(a.powerRankingSeason));
+  const powerRank = powerStats.findIndex((s) => s.castMemberId === castMemberId) + 1;
 
   return (
     <CastMemberSeasonHero
       name={castMemberName}
       seasonImage={seasonMedia?.imageUrl}
-      totalSeasons={totalSeasons}
+      castMemberSlug={castMemberSlug}
+      seasonNumber={seasonNumber}
+      seasonYears={seasonYears}
+      joinSeason={castMemberJoinSeason}
+      currentSeasonNumber={seasonNumber}
       careerSpan={careerSpan}
       episodesPresent={seasonStats.episodesPresent}
       totalEpisodesInSeason={season.numEpisodes}
-      screenTimeRanking={screenTimeRanking}
-      sketchRanking={sketchRanking}
-      powerRanking={powerRanking}
-      role={seasonCast?.status || "Repertory"}
+      screenTimeRanking={screenTimeRank}
+      segmentRanking={segmentRank}
+      powerRanking={powerRank}
       className={className}
     />
   );
