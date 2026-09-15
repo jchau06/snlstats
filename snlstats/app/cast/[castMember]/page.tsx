@@ -2,10 +2,10 @@
 import { prisma } from "@/src/lib/prisma";
 import { notFound } from "next/navigation";
 import { Header } from "@/src/components/ui/Header";
-import { CastMemberHeroSection } from "@/src/components/cast/CastMemberHeroSection";
-import { CareerStatsSummary } from "@/src/components/cast/CareerStatsSummary";
-import { SeasonStatsChartServer } from "@/src/components/cast/SeasonStatsChartServer";
-import { SeasonBySeasonTableServer } from "@/src/components/cast/SeasonBySeasonTableServer";
+import { CastMemberHeroSection } from "@/src/components/cast/career-focus/CastMemberHeroSection";
+import { CareerStatsSummary } from "@/src/components/cast/career-focus/CareerStatsSummary";
+import { SeasonStatsChartServer } from "@/src/components/cast/career-focus/SeasonStatsChartServer";
+import { SeasonBySeasonTableServer } from "@/src/components/cast/career-focus/SeasonBySeasonTableServer";
 
 interface Props {
   params: Promise<{
@@ -82,8 +82,7 @@ export default async function CastMemberPage({ params }: Props) {
     }
 
     if (leader.isPowerRankingLeader) {
-      if (!leadershipMap["powerRanking"])
-        leadershipMap["powerRanking"] = [];
+      if (!leadershipMap["powerRanking"]) leadershipMap["powerRanking"] = [];
       leadershipMap["powerRanking"].push(seasonLabel);
     }
   });
@@ -147,16 +146,14 @@ export default async function CastMemberPage({ params }: Props) {
           <CareerStatsSummary
             totalAppearances={careerStats.totalAppearances}
             averageAppearancesPerEp={Number(
-              careerStats.averageAppearancesPerEp
+              careerStats.averageAppearancesPerEp,
             )}
             totalLiveFromNewYorks={careerStats.totalLiveFromNewYorks}
             totalScreenTimeSeconds={careerStats.totalScreenTimeSeconds}
             averageScreenTimeSeconds={Number(
-              careerStats.averageScreenTimeSeconds
+              careerStats.averageScreenTimeSeconds,
             )}
-            averagePowerRanking={Number(
-              careerStats.averagePowerRanking
-            )}
+            averagePowerRanking={Number(careerStats.averagePowerRanking)}
           />
         </div>
 
@@ -170,7 +167,10 @@ export default async function CastMemberPage({ params }: Props) {
         {/* Season-by-Season Table Section */}
         <div className="px-4 md:px-8 py-4 border-t border-secondary/30">
           <div className="max-w-6xl mx-auto">
-            <SeasonBySeasonTableServer castMemberId={castMember.id} castMemberSlug={castMember.slug} />
+            <SeasonBySeasonTableServer
+              castMemberId={castMember.id}
+              castMemberSlug={castMember.slug}
+            />
           </div>
         </div>
       </div>

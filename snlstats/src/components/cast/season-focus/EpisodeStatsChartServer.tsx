@@ -1,20 +1,20 @@
-// src/components/cast/EpisodeStatsTableServer.tsx
+// src/components/cast/EpisodeStatsChartServer.tsx
 import { prisma } from "@/src/lib/prisma";
-import { EpisodeStatsTable } from "./EpisodeStatsTable";
+import { EpisodeStatsChartClient } from "./EpisodeStatsChartClient";
 
-interface EpisodeStatsTableServerProps {
+interface EpisodeStatsChartServerProps {
   castMemberId: string;
   seasonId: string;
   seasonNumber: number;
   className?: string;
 }
 
-export async function EpisodeStatsTableServer({
+export async function EpisodeStatsChartServer({
   castMemberId,
   seasonId,
   seasonNumber,
   className,
-}: EpisodeStatsTableServerProps) {
+}: EpisodeStatsChartServerProps) {
   // Fetch all cast performances in this season
   const performances = await prisma.castPerformance.findMany({
     where: {
@@ -66,7 +66,7 @@ export async function EpisodeStatsTableServer({
     });
   });
 
-  // Transform to table data with rankings
+  // Transform to chart data with rankings
   const data = performances.map((perf) => {
     // If host == musical guest, only show host (double-duty)
     let hostMusicalGuest: string;
@@ -86,7 +86,6 @@ export async function EpisodeStatsTableServer({
     const rank = rankEntry?.rank || episodePerfs.length;
 
     return {
-      seasonNumber,
       episodeNumber: perf.episode.episodeNumber,
       hostMusicalGuest,
       airDate: perf.episode.airDate.toISOString().split("T")[0],
@@ -95,12 +94,13 @@ export async function EpisodeStatsTableServer({
       segmentCount: perf.sketchCount,
       castRank: rank,
       totalCastInEpisode: episodePerfs.length,
+      seasonNumber,
     };
   });
 
   return (
     <div className={className}>
-      <EpisodeStatsTable data={data} />
+      <EpisodeStatsChartClient data={data} seasonNumber={seasonNumber} />
     </div>
   );
 }

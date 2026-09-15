@@ -56,7 +56,7 @@ export async function SeasonBySeasonTableServer({
         averageScreenTimeSeconds: Number(stat.averageScreenTimeSeconds),
         powerRankingSeason: Number(stat.powerRankingSeason),
       };
-    })
+    }),
   );
 
   return (

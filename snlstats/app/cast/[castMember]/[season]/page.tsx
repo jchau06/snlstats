@@ -2,10 +2,10 @@
 import { prisma } from "@/src/lib/prisma";
 import { notFound } from "next/navigation";
 import { Header } from "@/src/components/ui/Header";
-import { CastMemberSeasonHeroServer } from "@/src/components/cast/CastMemberSeasonHeroServer";
-import { SeasonStatsSummary } from "@/src/components/cast/SeasonStatsSummary";
-import { EpisodeStatsChartServer } from "@/src/components/cast/EpisodeStatsChartServer";
-import { EpisodeStatsTableServer } from "@/src/components/cast/EpisodeStatsTableServer";
+import { CastMemberSeasonHeroServer } from "@/src/components/cast/season-focus/CastMemberSeasonHeroServer";
+import { SeasonStatsSummary } from "@/src/components/cast/season-focus/SeasonStatsSummary";
+import { EpisodeStatsChartServer } from "@/src/components/cast/season-focus/EpisodeStatsChartServer";
+import { EpisodeStatsTableServer } from "@/src/components/cast/season-focus/EpisodeStatsTableServer";
 
 interface Props {
   params: Promise<{
@@ -112,7 +112,9 @@ export default async function CastMemberSeasonPage({ params }: Props) {
               totalAppearances={seasonStats.totalAppearances}
               averageAppearances={Number(seasonStats.averageAppearances)}
               totalScreenTimeSeconds={seasonStats.totalScreenTimeSeconds}
-              averageScreenTimeSeconds={Number(seasonStats.averageScreenTimeSeconds)}
+              averageScreenTimeSeconds={Number(
+                seasonStats.averageScreenTimeSeconds,
+              )}
               averagePowerRanking={Number(seasonStats.powerRankingSeason)}
               lfnyCount={lfnyCount}
               seasonNumber={season.seasonNumber}
@@ -123,14 +125,22 @@ export default async function CastMemberSeasonPage({ params }: Props) {
         {/* Episode Stats Chart Section */}
         <div className="px-4 md:px-8 py-8 border-t border-secondary/30">
           <div className="max-w-6xl mx-auto">
-            <EpisodeStatsChartServer castMemberId={castMember.id} seasonId={season.id} seasonNumber={season.seasonNumber} />
+            <EpisodeStatsChartServer
+              castMemberId={castMember.id}
+              seasonId={season.id}
+              seasonNumber={season.seasonNumber}
+            />
           </div>
         </div>
 
         {/* Episode Stats Table Section */}
         <div className="px-4 md:px-8 py-8 border-t border-secondary/30">
           <div className="max-w-6xl mx-auto">
-            <EpisodeStatsTableServer castMemberId={castMember.id} seasonId={season.id} seasonNumber={season.seasonNumber} />
+            <EpisodeStatsTableServer
+              castMemberId={castMember.id}
+              seasonId={season.id}
+              seasonNumber={season.seasonNumber}
+            />
           </div>
         </div>
       </div>

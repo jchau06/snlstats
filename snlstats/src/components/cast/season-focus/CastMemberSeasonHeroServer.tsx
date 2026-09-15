@@ -73,15 +73,22 @@ export async function CastMemberSeasonHeroServer({
   });
 
   // Calculate screen time ranking
-  const screenTimeRank = allSeasonStats.findIndex((s) => s.castMemberId === castMemberId) + 1;
+  const screenTimeRank =
+    allSeasonStats.findIndex((s) => s.castMemberId === castMemberId) + 1;
 
   // For segment ranking, sort by totalAppearances
-  const segmentStats = [...allSeasonStats].sort((a, b) => b.totalAppearances - a.totalAppearances);
-  const segmentRank = segmentStats.findIndex((s) => s.castMemberId === castMemberId) + 1;
+  const segmentStats = [...allSeasonStats].sort(
+    (a, b) => b.totalAppearances - a.totalAppearances,
+  );
+  const segmentRank =
+    segmentStats.findIndex((s) => s.castMemberId === castMemberId) + 1;
 
   // For power ranking, sort by powerRankingSeason
-  const powerStats = [...allSeasonStats].sort((a, b) => Number(b.powerRankingSeason) - Number(a.powerRankingSeason));
-  const powerRank = powerStats.findIndex((s) => s.castMemberId === castMemberId) + 1;
+  const powerStats = [...allSeasonStats].sort(
+    (a, b) => Number(b.powerRankingSeason) - Number(a.powerRankingSeason),
+  );
+  const powerRank =
+    powerStats.findIndex((s) => s.castMemberId === castMemberId) + 1;
 
   return (
     <CastMemberSeasonHero

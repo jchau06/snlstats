@@ -61,7 +61,7 @@ export async function SeasonStatsChartServer({
         castMembersInSeason: allSeasonStats.length,
         castMemberRankInSeason: rank,
       };
-    })
+    }),
   );
 
   return (
