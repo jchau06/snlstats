@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { Header } from "@/src/components/ui/Header";
 import { CastMemberSeasonHeroServer } from "@/src/components/cast/CastMemberSeasonHeroServer";
 import { SeasonStatsSummary } from "@/src/components/cast/SeasonStatsSummary";
+import { EpisodeStatsChartServer } from "@/src/components/cast/EpisodeStatsChartServer";
+import { EpisodeStatsTableServer } from "@/src/components/cast/EpisodeStatsTableServer";
 
 interface Props {
   params: Promise<{
@@ -12,33 +14,9 @@ interface Props {
   }>;
 }
 
-export async function generateStaticParams() {
-  // Generate all combinations of cast members and seasons
-  const seasonStats = await prisma.seasonStats.findMany({
-    select: {
-      season: { select: { seasonNumber: true, yearStarted: true, yearEnded: true } },
-      castMemberId: true,
-    },
-  });
-
-  // Map castMemberId to slug
-  const castMembers = await prisma.castMember.findMany({
-    select: { id: true, slug: true },
-  });
-
-  const castMemberMap = new Map(castMembers.map((cm) => [cm.id, cm.slug]));
-
-  return seasonStats
-    .map((stat) => {
-      const slug = castMemberMap.get(stat.castMemberId);
-      if (!slug) return null;
-      return {
-        castMember: slug,
-        season: `${stat.season.yearStarted}-${stat.season.yearEnded}`,
-      };
-    })
-    .filter((item) => item !== null);
-}
+// Use dynamic rendering for this high-cardinality route
+export const dynamicParams = true;
+export const revalidate = 3600; // Revalidate every hour
 
 export default async function CastMemberSeasonPage({ params }: Props) {
   const { castMember: castMemberSlug, season: seasonRange } = await params;
@@ -139,6 +117,20 @@ export default async function CastMemberSeasonPage({ params }: Props) {
               lfnyCount={lfnyCount}
               seasonNumber={season.seasonNumber}
             />
+          </div>
+        </div>
+
+        {/* Episode Stats Chart Section */}
+        <div className="px-4 md:px-8 py-8 border-t border-secondary/30">
+          <div className="max-w-6xl mx-auto">
+            <EpisodeStatsChartServer castMemberId={castMember.id} seasonId={season.id} seasonNumber={season.seasonNumber} />
+          </div>
+        </div>
+
+        {/* Episode Stats Table Section */}
+        <div className="px-4 md:px-8 py-8 border-t border-secondary/30">
+          <div className="max-w-6xl mx-auto">
+            <EpisodeStatsTableServer castMemberId={castMember.id} seasonId={season.id} seasonNumber={season.seasonNumber} />
           </div>
         </div>
       </div>
