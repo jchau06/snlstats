@@ -160,11 +160,11 @@ export function PerformanceBarChart({
     };
 
     // Get color based on absolute performance with smooth gradient
+    // Red (0) → Yellow (0.5) → Green (1)
     const getBarColor = (value: number, minVal: number, maxVal: number) => {
       const range = maxVal - minVal;
       const normalized = range === 0 ? 0 : (value - minVal) / range; // 0 to 1
 
-      // Smooth gradient: Red (0) → Yellow (0.5) → Green (1)
       if (normalized < 0.5) {
         // Red to Yellow: interpolate between #EF4444 and #FFD200
         const t = normalized * 2; // 0 to 1 within red-yellow range
