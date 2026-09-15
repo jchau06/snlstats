@@ -36,6 +36,7 @@ model Season {
   yearEnded   Int
   numEpisodes Int
   heroImageUrl String?
+  navImageUrl String?
   createdAt   DateTime @default(now())
 
   episodes    Episode[]
