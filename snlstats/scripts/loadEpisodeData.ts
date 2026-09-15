@@ -39,13 +39,14 @@ async function loadEpisodeData(filePath: string) {
       `Loading SNL S${data.season} E${data.episode}: ${data.host}...`,
     );
 
-    // Season upsert with hardcoded dates
+    // Season dates
     const seasonYears: Record<number, { start: number; end: number }> = {
       51: { start: 2025, end: 2026 },
       50: { start: 2024, end: 2025 },
       49: { start: 2023, end: 2024 },
     };
 
+    // Get or create the season
     const season = await prisma.season.upsert({
       where: { seasonNumber: data.season },
       create: {
@@ -57,12 +58,34 @@ async function loadEpisodeData(filePath: string) {
       update: {},
     });
 
+    // Determine the latest season in the database.
+    // Only performers from this season should be marked as "current".
+    const latestSeason = await prisma.season.findFirst({
+      orderBy: {
+        seasonNumber: "desc",
+      },
+    });
+
+    const isCurrentSeason =
+      latestSeason !== null &&
+      data.season === latestSeason.seasonNumber;
+
+    console.log(
+      isCurrentSeason
+        ? `📌 Season ${data.season} is the current/latest season`
+        : `📚 Season ${data.season} is a historical season`,
+    );
+
     // Create episode slug
-    const episodeSlug = `snl-${data.season}-ep-${String(data.episode).padStart(2, "0")}-${slugify(data.host)}`;
+    const episodeSlug = `snl-${data.season}-ep-${String(
+      data.episode,
+    ).padStart(2, "0")}-${slugify(data.host)}`;
 
     // Ensure episode exists
     const episode = await prisma.episode.upsert({
-      where: { slug: episodeSlug },
+      where: {
+        slug: episodeSlug,
+      },
       create: {
         seasonId: season.id,
         episodeNumber: data.episode,
@@ -78,42 +101,68 @@ async function loadEpisodeData(filePath: string) {
       },
     });
 
-    // Upsert cast members and their performance
+    // ---------------------------------------------------------
+    // Cast performances
+    // ---------------------------------------------------------
+
     for (const perf of data.castPerformance) {
-      // First, check if cast member exists
-      const existingMember = await prisma.castMember.findUnique({
-        where: { name: perf.name },
+      // Check whether cast member already exists
+      let castMember = await prisma.castMember.findUnique({
+        where: {
+          name: perf.name,
+        },
       });
 
-      if (existingMember) {
-        // Cast member exists - DO NOT update joinSeason
-        // Only update status if needed (e.g., if they're appearing, they're still active)
-        await prisma.castMember.update({
-          where: { id: existingMember.id },
-          data: {
-            status: "current", // Mark as currently active
-            leaveSeason: null, // If they're performing, they haven't left
-          },
-        });
+      if (castMember) {
+        /*
+         * IMPORTANT:
+         *
+         * Only modify CastMember career status when loading
+         * the current/latest season.
+         *
+         * This prevents loading historical seasons such as
+         * Season 50 from changing:
+         *
+         *   status: alumni -> current
+         *   leaveSeason: 50 -> null
+         *
+         * Historical episode data should not overwrite a
+         * cast member's current career status.
+         */
+        if (isCurrentSeason) {
+          castMember = await prisma.castMember.update({
+            where: {
+              id: castMember.id,
+            },
+            data: {
+              status: "current",
+              leaveSeason: null,
+            },
+          });
+        }
       } else {
-        // New cast member - set joinSeason to current season
-        await prisma.castMember.create({
+        /*
+         * Cast member doesn't exist yet.
+         *
+         * If we're loading the current season, they are a
+         * current cast member.
+         *
+         * If we're loading a historical season, don't assume
+         * they are currently active.
+         */
+        castMember = await prisma.castMember.create({
           data: {
             name: perf.name,
             slug: slugify(perf.name),
             joinSeason: data.season,
-            status: "current",
+            status: isCurrentSeason ? "current" : "alumni",
+            leaveSeason: isCurrentSeason ? null : data.season,
             headshot: `https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/cast/${slugify(perf.name)}.jpg`,
           },
         });
       }
 
-      // Get the cast member (now guaranteed to exist)
-      const castMember = await prisma.castMember.findUniqueOrThrow({
-        where: { name: perf.name },
-      });
-
-      // Upsert performance
+      // Upsert the cast member's performance for this episode
       await prisma.castPerformance.upsert({
         where: {
           episodeId_castMemberId: {
@@ -138,20 +187,29 @@ async function loadEpisodeData(filePath: string) {
       });
     }
 
-    // Load LFNY data
+    // ---------------------------------------------------------
+    // Live From New York
+    // ---------------------------------------------------------
+
     const lfnyCastIds = await Promise.all(
       (data.liveFromNewYork || []).map(async (name) => {
         const member = await prisma.castMember.findUnique({
-          where: { name },
-          select: { id: true },
+          where: {
+            name,
+          },
+          select: {
+            id: true,
+          },
         });
+
         return member?.id;
       }),
     );
 
-    // Always upsert, even if empty array
     await prisma.liveFromNewYork.upsert({
-      where: { episodeId: episode.id },
+      where: {
+        episodeId: episode.id,
+      },
       create: {
         episodeId: episode.id,
         castMemberIds: lfnyCastIds.filter(Boolean) as string[],
@@ -169,7 +227,11 @@ async function loadEpisodeData(filePath: string) {
 }
 
 async function main() {
-  const episodesDir = path.join(process.cwd(), "public/data/episodes");
+  const episodesDir = path.join(
+    process.cwd(),
+    "public/data/episodes",
+  );
+
   const args = process.argv.slice(2);
 
   let files: string[];
@@ -182,29 +244,50 @@ async function main() {
       .readdirSync(episodesDir)
       .filter((file) => file.endsWith(".json"))
       .sort();
+
     console.log(`Found ${files.length} episode files to load\n`);
   }
 
+  let failedCount = 0;
+
   for (const file of files) {
-    // If it's an absolute path, use it directly. Otherwise, join with episodesDir
+    /*
+     * If an absolute path is provided, use it directly.
+     * Otherwise, look inside public/data/episodes.
+     */
     const filePath = path.isAbsolute(file)
       ? file
       : path.join(episodesDir, file);
 
-    // Verify file exists
     if (!fs.existsSync(filePath)) {
       console.error(`✗ File not found: ${file}`);
+      failedCount++;
       continue;
     }
 
-    await loadEpisodeData(filePath);
+    try {
+      await loadEpisodeData(filePath);
+    } catch {
+      failedCount++;
+    }
   }
 
-  console.log("\n✓ All specified episodes loaded successfully!");
   await prisma.$disconnect();
+
+  if (failedCount > 0) {
+    console.error(
+      `\n❌ Finished with ${failedCount} file(s) that failed to load.`,
+    );
+    process.exit(1);
+  }
+
+  console.log(
+    `\n✓ All ${files.length} specified episode(s) loaded successfully!`,
+  );
 }
 
-main().catch((error) => {
+main().catch(async (error) => {
   console.error("Fatal error:", error);
+  await prisma.$disconnect();
   process.exit(1);
 });
