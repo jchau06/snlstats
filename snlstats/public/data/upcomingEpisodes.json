@@ -1,0 +1,32 @@
+{
+  "upcomingEpisodes": [
+    {
+      "seasonNumber": 52,
+      "episodeNumber": 1,
+      "airDate": "2026-09-26",
+      "host": "Jalen Brunson",
+      "musicalGuest": "Katseye"
+    },
+    {
+      "seasonNumber": 52,
+      "episodeNumber": 2,
+      "airDate": "2026-10-03",
+      "host": "Dakota Johnson",
+      "musicalGuest": "Turnstile"
+    },
+    {
+      "seasonNumber": 52,
+      "episodeNumber": 3,
+      "airDate": "2026-10-10",
+      "host": "Shane Gillis",
+      "musicalGuest": "Rosalía"
+    },
+    {
+      "seasonNumber": 52,
+      "episodeNumber": 4,
+      "airDate": "2026-10-31",
+      "host": "Inde Navarrette",
+      "musicalGuest": "Gracie Abrams"
+    }
+  ]
+}

@@ -224,3 +224,21 @@ model CastMemberCareerStats {
   
   @@index([castMemberId])
 }
+
+// Add this model to your schema.prisma file
+
+model UpcomingEpisode {
+  id              String   @id @default(cuid())
+  seasonNumber    Int
+  episodeNumber   Int
+  airDate         DateTime
+  host            String
+  musicalGuest    String
+  announcedDate   DateTime @default(now())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([seasonNumber, episodeNumber])
+  @@index([airDate])
+  @@index([announcedDate])
+}
