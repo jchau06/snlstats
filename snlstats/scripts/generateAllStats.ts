@@ -7,20 +7,34 @@ async function generateCastMemberCareerStats() {
   console.log("🚀 Starting CastMemberCareerStats generation...\n");
 
   try {
-    // Fetch all LFNY data once (optimization)
+    // ---------------------------------------------------------
+    // Fetch all LFNY data once
+    // ---------------------------------------------------------
+
     const allLFNYs = await prisma.liveFromNewYork.findMany();
-    const lfnyBycastMemberId: { [castMemberId: string]: number } = {};
-    
+
+    const lfnyByCastMemberId: { [castMemberId: string]: number } = {};
+
     for (const lfny of allLFNYs) {
       for (const castMemberId of lfny.castMemberIds) {
-        lfnyBycastMemberId[castMemberId] =
-          (lfnyBycastMemberId[castMemberId] || 0) + 1;
+        lfnyByCastMemberId[castMemberId] =
+          (lfnyByCastMemberId[castMemberId] || 0) + 1;
       }
     }
 
+    // ---------------------------------------------------------
     // Fetch all seasons for year lookups
+    // ---------------------------------------------------------
+
     const allSeasons = await prisma.season.findMany();
-    const seasonMap: { [seasonNumber: number]: { yearStarted: number; yearEnded: number } } = {};
+
+    const seasonMap: {
+      [seasonNumber: number]: {
+        yearStarted: number;
+        yearEnded: number;
+      };
+    } = {};
+
     for (const season of allSeasons) {
       seasonMap[season.seasonNumber] = {
         yearStarted: season.yearStarted,
@@ -28,19 +42,29 @@ async function generateCastMemberCareerStats() {
       };
     }
 
+    // ---------------------------------------------------------
     // Get all cast members
+    // ---------------------------------------------------------
+
     const allCastMembers = await prisma.castMember.findMany();
+
     console.log(`Found ${allCastMembers.length} cast members\n`);
 
-    let created = 0;
+    let processed = 0;
+
+    // ---------------------------------------------------------
+    // Generate career stats
+    // ---------------------------------------------------------
 
     for (const castMember of allCastMembers) {
       try {
-        // Get all non-absent performances for this cast member
+        // Get all non-absent performances
         const performances = await prisma.castPerformance.findMany({
           where: {
             castMemberId: castMember.id,
-            status: { not: "absent" },
+            status: {
+              not: "absent",
+            },
           },
           include: {
             episode: {
@@ -52,90 +76,185 @@ async function generateCastMemberCareerStats() {
         });
 
         if (performances.length === 0) {
-          console.log(`⏭️  ${castMember.name}: No performances (skipped)`);
+          console.log(
+            `⏭️  ${castMember.name}: No performances (skipped)`,
+          );
           continue;
         }
 
-        // Calculate career stats
+        // -----------------------------------------------------
+        // Calculate career totals
+        // -----------------------------------------------------
+
         const uniqueSeasons = new Set(
-          performances.map((p) => p.episode.seasonId)
+          performances.map((p) => p.episode.seasonId),
         );
+
         const uniqueEpisodes = new Set(
-          performances.map((p) => p.episodeId)
+          performances.map((p) => p.episodeId),
         );
 
         const totalScreenTimeSeconds = performances.reduce(
           (sum, p) => sum + p.screenTimeSeconds,
-          0
+          0,
         );
+
         const totalAppearances = performances.reduce(
           (sum, p) => sum + p.sketchCount,
-          0
+          0,
         );
-        
-        const powerRankings = performances.map((p) =>
-          typeof p.powerRanking === "number"
-            ? p.powerRanking
-            : Number(p.powerRanking)
-        );
-        
+
+        // -----------------------------------------------------
+        // Calculate average power ranking
+        // -----------------------------------------------------
+
+        const powerRankings = performances
+          .map((p) => Number(p.powerRanking))
+          .filter((value) => !Number.isNaN(value));
+
         const averagePowerRanking =
           powerRankings.length > 0
             ? powerRankings.reduce((sum, pr) => sum + pr, 0) /
               powerRankings.length
             : 0;
 
+        // -----------------------------------------------------
+        // Calculate episode averages
+        // -----------------------------------------------------
+
         const totalEpisodes = uniqueEpisodes.size;
+
         const averageScreenTimeSeconds =
-          totalScreenTimeSeconds / totalEpisodes;
-        const averageAppearancesPerEp = totalAppearances / totalEpisodes;
-        const totalLiveFromNewYorks = lfnyBycastMemberId[castMember.id] || 0;
+          totalEpisodes > 0
+            ? totalScreenTimeSeconds / totalEpisodes
+            : 0;
 
-        // Get year joined and year left
-        let yearJoined: number | null = null;
-        let yearLeft: number | null = null;
+        const averageAppearancesPerEp =
+          totalEpisodes > 0
+            ? totalAppearances / totalEpisodes
+            : 0;
 
-        if (castMember.joinSeason && seasonMap[castMember.joinSeason]) {
-          yearJoined = seasonMap[castMember.joinSeason].yearStarted;
+        const totalLiveFromNewYorks =
+          lfnyByCastMemberId[castMember.id] || 0;
+
+        // -----------------------------------------------------
+        // Calculate year joined / year left
+        //
+        // IMPORTANT:
+        // Only use a calculated value when the CastMember has
+        // valid season information.
+        // -----------------------------------------------------
+
+        let calculatedYearJoined: number | null = null;
+        let calculatedYearLeft: number | null = null;
+
+        if (
+          castMember.joinSeason !== null &&
+          castMember.joinSeason !== undefined &&
+          seasonMap[castMember.joinSeason]
+        ) {
+          calculatedYearJoined =
+            seasonMap[castMember.joinSeason].yearStarted;
         }
 
-        if (castMember.leaveSeason && seasonMap[castMember.leaveSeason]) {
-          yearLeft = seasonMap[castMember.leaveSeason].yearEnded;
+        if (
+          castMember.leaveSeason !== null &&
+          castMember.leaveSeason !== undefined &&
+          seasonMap[castMember.leaveSeason]
+        ) {
+          calculatedYearLeft =
+            seasonMap[castMember.leaveSeason].yearEnded;
         }
 
+        // -----------------------------------------------------
+        // Get existing career stats
+        // -----------------------------------------------------
+
+        const existingCareerStats =
+          await prisma.castMemberCareerStats.findUnique({
+            where: {
+              castMemberId: castMember.id,
+            },
+          });
+
+        /*
+         * Preserve existing yearJoined if CastMember.joinSeason
+         * does not provide a valid value.
+         *
+         * This prevents a stats regeneration from doing:
+         *
+         *   existing yearJoined: 2020
+         *   calculated yearJoined: null
+         *
+         * and accidentally changing it to:
+         *
+         *   yearJoined: null
+         */
+        const yearJoined =
+          calculatedYearJoined ??
+          existingCareerStats?.yearJoined ??
+          null;
+
+        /*
+         * For yearLeft, use the current CastMember value when
+         * available. Otherwise preserve the existing value.
+         */
+        const yearLeft =
+          calculatedYearLeft ??
+          existingCareerStats?.yearLeft ??
+          null;
+
+        // -----------------------------------------------------
         // Upsert career stats
+        // -----------------------------------------------------
+
         await prisma.castMemberCareerStats.upsert({
-          where: { castMemberId: castMember.id },
+          where: {
+            castMemberId: castMember.id,
+          },
+
           create: {
             castMemberId: castMember.id,
+
             totalSeasons: uniqueSeasons.size,
             totalEpisodes,
+
             totalScreenTimeSeconds,
             totalAppearances,
-            averageScreenTimeSeconds: Math.round(
-              averageScreenTimeSeconds * 100
-            ) / 100,
-            averageAppearancesPerEp: Math.round(
-              averageAppearancesPerEp * 100
-            ) / 100,
-            averagePowerRanking: Math.round(averagePowerRanking * 100) / 100,
+
+            averageScreenTimeSeconds:
+              Math.round(averageScreenTimeSeconds * 100) / 100,
+
+            averageAppearancesPerEp:
+              Math.round(averageAppearancesPerEp * 100) / 100,
+
+            averagePowerRanking:
+              Math.round(averagePowerRanking * 100) / 100,
+
             totalLiveFromNewYorks,
+
             yearJoined,
             yearLeft,
           },
+
           update: {
             totalSeasons: uniqueSeasons.size,
             totalEpisodes,
+
             totalScreenTimeSeconds,
             totalAppearances,
-            averageScreenTimeSeconds: Math.round(
-              averageScreenTimeSeconds * 100
-            ) / 100,
-            averageAppearancesPerEp: Math.round(
-              averageAppearancesPerEp * 100
-            ) / 100,
-            averagePowerRanking: Math.round(averagePowerRanking * 100) / 100,
+
+            averageScreenTimeSeconds:
+              Math.round(averageScreenTimeSeconds * 100) / 100,
+
+            averageAppearancesPerEp:
+              Math.round(averageAppearancesPerEp * 100) / 100,
+
+            averagePowerRanking:
+              Math.round(averagePowerRanking * 100) / 100,
+
             totalLiveFromNewYorks,
+
             yearJoined,
             yearLeft,
           },
@@ -147,93 +266,138 @@ async function generateCastMemberCareerStats() {
             : `${yearJoined}-Present`
           : "Unknown";
 
-        console.log(`✅ ${castMember.name} (${yearsDisplay})`);
-        created++;
+        console.log(
+          `✅ ${castMember.name} (${yearsDisplay})`,
+        );
+
+        processed++;
       } catch (error) {
         console.error(
           `❌ Error processing ${castMember.name}:`,
-          error instanceof Error ? error.message : error
+          error instanceof Error
+            ? error.message
+            : error,
         );
       }
     }
 
-    console.log(`\n✨ CastMemberCareerStats: ${created} cast members processed\n`);
+    console.log(
+      `\n✨ CastMemberCareerStats: ${processed} cast members processed\n`,
+    );
   } catch (error) {
     console.error("❌ Error:", error);
     process.exit(1);
   }
 }
 
+// =============================================================
+// Generate Season Leaders
+// =============================================================
+
 async function generateSeasonLeaders() {
   console.log("🚀 Starting SeasonLeaders generation...\n");
 
   try {
-    // Get all seasons
     const allSeasons = await prisma.season.findMany({
-      orderBy: { seasonNumber: "asc" },
+      orderBy: {
+        seasonNumber: "asc",
+      },
     });
+
     console.log(`Found ${allSeasons.length} seasons\n`);
 
     for (const season of allSeasons) {
-      // Get all SeasonStats for this season
       const seasonStats = await prisma.seasonStats.findMany({
-        where: { seasonId: season.id },
+        where: {
+          seasonId: season.id,
+        },
         include: {
           castMember: {
-            select: { id: true, name: true },
+            select: {
+              id: true,
+              name: true,
+            },
           },
         },
       });
 
       if (seasonStats.length === 0) {
-        console.log(`⏭️  Season ${season.seasonNumber}: No stats found`);
+        console.log(
+          `⏭️  Season ${season.seasonNumber}: No stats found`,
+        );
         continue;
       }
 
-      // Get #1 in Screen Time (only 1 leader)
+      // -------------------------------------------------------
+      // Find leaders
+      // -------------------------------------------------------
+
       const screenTimeLeader = [...seasonStats]
-        .sort((a, b) => b.totalScreenTimeSeconds - a.totalScreenTimeSeconds)[0]
-        ?.castMemberId;
+        .sort(
+          (a, b) =>
+            b.totalScreenTimeSeconds -
+            a.totalScreenTimeSeconds,
+        )[0]?.castMemberId;
 
-      // Get #1 in Sketches (only 1 leader)
       const sketchesLeader = [...seasonStats]
-        .sort((a, b) => b.totalAppearances - a.totalAppearances)[0]
-        ?.castMemberId;
+        .sort(
+          (a, b) =>
+            b.totalAppearances -
+            a.totalAppearances,
+        )[0]?.castMemberId;
 
-      // Get #1 in Power Ranking (only 1 leader)
       const powerLeader = [...seasonStats]
-        .sort((a, b) => b.powerRankingSeason - a.powerRankingSeason)[0]
-        ?.castMemberId;
+        .sort(
+          (a, b) =>
+            b.powerRankingSeason -
+            a.powerRankingSeason,
+        )[0]?.castMemberId;
 
-      // Print leaders for this season
+      // -------------------------------------------------------
+      // Print leaders
+      // -------------------------------------------------------
+
       const screenTimeLeaderName = seasonStats.find(
-        (s) => s.castMemberId === screenTimeLeader
+        (s) => s.castMemberId === screenTimeLeader,
       )?.castMember.name;
+
       const sketchesLeaderName = seasonStats.find(
-        (s) => s.castMemberId === sketchesLeader
+        (s) => s.castMemberId === sketchesLeader,
       )?.castMember.name;
+
       const powerLeaderName = seasonStats.find(
-        (s) => s.castMemberId === powerLeader
+        (s) => s.castMemberId === powerLeader,
       )?.castMember.name;
 
       console.log(
-        `📊 Season ${season.seasonNumber} (${season.yearStarted}-${season.yearEnded})`
-      );
-      console.log(
-        `   🏆 Screen Time: ${screenTimeLeaderName}`
-      );
-      console.log(
-        `   🎬 Sketches: ${sketchesLeaderName}`
-      );
-      console.log(
-        `   ⚡ Power Ranking: ${powerLeaderName}`
+        `📊 Season ${season.seasonNumber} (${season.yearStarted}-${season.yearEnded})`,
       );
 
-      // Upsert SeasonLeaders for each cast member
+      console.log(
+        `   🏆 Screen Time: ${screenTimeLeaderName}`,
+      );
+
+      console.log(
+        `   🎬 Sketches: ${sketchesLeaderName}`,
+      );
+
+      console.log(
+        `   ⚡ Power Ranking: ${powerLeaderName}`,
+      );
+
+      // -------------------------------------------------------
+      // Upsert SeasonLeaders
+      // -------------------------------------------------------
+
       for (const stat of seasonStats) {
-        const isScreenTimeLeader = stat.castMemberId === screenTimeLeader;
-        const isSketchLeader = stat.castMemberId === sketchesLeader;
-        const isPowerRankingLeader = stat.castMemberId === powerLeader;
+        const isScreenTimeLeader =
+          stat.castMemberId === screenTimeLeader;
+
+        const isSketchLeader =
+          stat.castMemberId === sketchesLeader;
+
+        const isPowerRankingLeader =
+          stat.castMemberId === powerLeader;
 
         await prisma.seasonLeaders.upsert({
           where: {
@@ -242,6 +406,7 @@ async function generateSeasonLeaders() {
               castMemberId: stat.castMemberId,
             },
           },
+
           create: {
             seasonId: season.id,
             castMemberId: stat.castMemberId,
@@ -249,6 +414,7 @@ async function generateSeasonLeaders() {
             isSketchLeader,
             isPowerRankingLeader,
           },
+
           update: {
             isScreenTimeLeader,
             isSketchLeader,
@@ -258,29 +424,47 @@ async function generateSeasonLeaders() {
       }
 
       console.log(
-        `✅ Season ${season.seasonNumber}: ${seasonStats.length} cast members processed\n`
+        `✅ Season ${season.seasonNumber}: ${seasonStats.length} cast members processed\n`,
       );
     }
 
-    console.log("✨ SeasonLeaders generation complete!\n");
+    console.log(
+      "✨ SeasonLeaders generation complete!\n",
+    );
   } catch (error) {
     console.error("❌ Error:", error);
     process.exit(1);
   }
 }
 
+// =============================================================
+// Main
+// =============================================================
+
 async function main() {
-  console.log("════════════════════════════════════════════════════");
-  console.log("  SNL Stats - Generate Career Stats & Season Leaders");
-  console.log("════════════════════════════════════════════════════\n");
+  console.log(
+    "════════════════════════════════════════════════════",
+  );
+  console.log(
+    "  SNL Stats - Generate Career Stats & Season Leaders",
+  );
+  console.log(
+    "════════════════════════════════════════════════════\n",
+  );
 
   try {
     await generateCastMemberCareerStats();
     await generateSeasonLeaders();
 
-    console.log("════════════════════════════════════════════════════");
-    console.log("✨ All stats generated successfully!");
-    console.log("════════════════════════════════════════════════════");
+    console.log(
+      "════════════════════════════════════════════════════",
+    );
+    console.log(
+      "✨ All stats generated successfully!",
+    );
+    console.log(
+      "════════════════════════════════════════════════════",
+    );
   } catch (error) {
     console.error("❌ Fatal Error:", error);
     process.exit(1);
