@@ -1,4 +1,3 @@
-// src/components/cast-nav/AlumniSection.tsx
 "use client";
 
 import React, { useState, useMemo } from "react";
@@ -30,12 +29,15 @@ export function AlumniSection({
       }
 
       // Search by season (e.g., "45" or "Season 45")
+      // Cast member must have been active during that season
       const seasonQuery = query.replace(/season\s*/i, "");
       if (seasonQuery && !isNaN(Number(seasonQuery))) {
         const seasonNum = Number(seasonQuery);
+        // For alumni, check if they were active during this season
+        if (!member.joinSeason || !member.leaveSeason) return false;
         return (
-          member.joinSeason === seasonNum ||
-          (member.leaveSeason && member.leaveSeason >= seasonNum)
+          member.joinSeason <= seasonNum &&
+          member.leaveSeason >= seasonNum
         );
       }
 
@@ -90,14 +92,16 @@ export function AlumniSection({
           onChange={(e) => onSortChange(e.target.value as SortType)}
           className="bg-neutral border border-secondary text-tertiary px-4 py-2 rounded-sm font-mono text-xs uppercase font-bold hover:border-primary transition-colors cursor-pointer whitespace-nowrap"
         >
-          <option value="default">Sort By: Default</option>
+          <option value="default">Sort By: Alphabetical</option>
           <option value="earliest-hires">Earliest Hires</option>
           <option value="latest-hires">Latest Hires</option>
           <option value="avg-sketches">Average Sketches</option>
           <option value="total-sketches">Total Sketches</option>
           <option value="avg-screen-time">Average Screen Time</option>
           <option value="total-screen-time">Total Screen Time</option>
+          <option value="total-episodes">Total Episodes</option>
           <option value="power-ranking">Power Ranking</option>
+          <option value="total-lfnys">Total LFNYs</option>
         </select>
       </div>
 

@@ -1,4 +1,3 @@
-// src/components/cast-nav/CastMemberNavigationPageClient.tsx
 "use client";
 
 import React, { useState, useMemo } from "react";
@@ -20,6 +19,9 @@ export interface CastMemberData {
     averageScreenTimeSeconds: number;
     averageAppearancesPerEp: number;
     averagePowerRanking: number;
+    totalLiveFromNewYorks: number;
+    totalSeasons: number;
+    totalEpisodes: number;
   };
 }
 
@@ -36,7 +38,9 @@ export type SortType =
   | "total-sketches"
   | "avg-screen-time"
   | "total-screen-time"
-  | "power-ranking";
+  | "total-episodes"
+  | "power-ranking"
+  | "total-lfnys";
 
 export function CastMemberNavigationPageClient({
   castMembers,
@@ -57,10 +61,18 @@ export function CastMemberNavigationPageClient({
         sorted.sort((a, b) => getLastName(a.name).localeCompare(getLastName(b.name)));
         break;
       case "earliest-hires":
-        sorted.sort((a, b) => (a.joinSeason || 0) - (b.joinSeason || 0));
+        sorted.sort((a, b) => {
+          const seasonDiff = (a.joinSeason || 0) - (b.joinSeason || 0);
+          if (seasonDiff !== 0) return seasonDiff;
+          return getLastName(a.name).localeCompare(getLastName(b.name));
+        });
         break;
       case "latest-hires":
-        sorted.sort((a, b) => (b.joinSeason || 0) - (a.joinSeason || 0));
+        sorted.sort((a, b) => {
+          const seasonDiff = (b.joinSeason || 0) - (a.joinSeason || 0);
+          if (seasonDiff !== 0) return seasonDiff;
+          return getLastName(a.name).localeCompare(getLastName(b.name));
+        });
         break;
       case "avg-sketches":
         sorted.sort(
@@ -90,11 +102,25 @@ export function CastMemberNavigationPageClient({
             (a.careerStats?.totalScreenTimeSeconds || 0)
         );
         break;
+      case "total-episodes":
+        sorted.sort(
+          (a, b) =>
+            (b.careerStats?.totalEpisodes || 0) -
+            (a.careerStats?.totalEpisodes || 0)
+        );
+        break;
       case "power-ranking":
         sorted.sort(
           (a, b) =>
             (b.careerStats?.averagePowerRanking || 0) -
             (a.careerStats?.averagePowerRanking || 0)
+        );
+        break;
+      case "total-lfnys":
+        sorted.sort(
+          (a, b) =>
+            (b.careerStats?.totalLiveFromNewYorks || 0) -
+            (a.careerStats?.totalLiveFromNewYorks || 0)
         );
         break;
     }
@@ -107,6 +133,8 @@ export function CastMemberNavigationPageClient({
         "avg-screen-time",
         "total-screen-time",
         "power-ranking",
+        "total-lfnys",
+        "total-episodes",
       ].includes(sortBy)
     ) {
       sorted.forEach((member, index) => {

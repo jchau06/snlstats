@@ -1,4 +1,3 @@
-// src/components/cast-nav/CastMemberCard.tsx
 "use client";
 
 import React from "react";
@@ -33,9 +32,8 @@ const getSeasonDisplay = (joinSeason?: number, leaveSeason?: number): string => 
     return `Season ${joinSeason} - Present`;
   }
   
-  // Alumni: calculate number of seasons
-  const numSeasons = leaveSeason - joinSeason + 1;
-  return `${numSeasons} Seasons (${joinSeason}-${leaveSeason})`;
+  // Alumni: just show season range
+  return `Season ${joinSeason} - ${leaveSeason}`;
 };
 
 export function CastMemberCard({
@@ -58,27 +56,40 @@ export function CastMemberCard({
       case "avg-sketches":
         return {
           line1: `${stats.totalAppearances} SKETCHES`,
-          line2: `${stats.averageAppearancesPerEp.toFixed(2)} AVG`,
+          line2: `${stats.averageAppearancesPerEp.toFixed(2)} AVG/EP - ${stats.totalEpisodes} EPS`,
         };
       case "total-sketches":
         return {
           line1: `${stats.totalAppearances} SKETCHES`,
-          line2: `${stats.averageAppearancesPerEp.toFixed(2)} AVG`,
+          line2: `${stats.averageAppearancesPerEp.toFixed(2)} AVG/EP - ${stats.totalEpisodes} EPS`,
         };
       case "avg-screen-time":
         return {
           line1: `${formatScreenTime(stats.totalScreenTimeSeconds)} TOTAL`,
-          line2: `${formatScreenTime(stats.averageScreenTimeSeconds)} AVG`,
+          line2: `${formatScreenTime(stats.averageScreenTimeSeconds)} AVG - ${stats.totalEpisodes} EPS`,
         };
       case "total-screen-time":
         return {
           line1: `${formatScreenTime(stats.totalScreenTimeSeconds)} TOTAL`,
-          line2: `${formatScreenTime(stats.averageScreenTimeSeconds)} AVG`,
+          line2: `${formatScreenTime(stats.averageScreenTimeSeconds)} AVG - ${stats.totalEpisodes} EPS`,
+        };
+      case "total-episodes":
+        return {
+          line1: `${stats.totalEpisodes} EPISODES`,
+          line2: `${stats.totalSeasons} SEASONS`,
         };
       case "power-ranking":
         return {
           line1: `${stats.averagePowerRanking.toFixed(2)} AVG PWR`,
-          line2: `${member.careerStats?.totalAppearances} SKETCHES`,
+          line2: `${stats.totalAppearances} SKETCHES - ${stats.totalEpisodes} EPS`,
+        };
+      case "total-lfnys":
+        const lfnyAvg = stats.totalSeasons
+          ? (stats.totalLiveFromNewYorks / stats.totalSeasons).toFixed(2)
+          : "0.00";
+        return {
+          line1: `${stats.totalLiveFromNewYorks} TOTAL LFNY`,
+          line2: `${lfnyAvg} AVG/SEASON - ${stats.totalSeasons} SEASONS`,
         };
       default:
         return { line1: "—", line2: "—" };
@@ -92,6 +103,8 @@ export function CastMemberCard({
     "avg-screen-time",
     "total-screen-time",
     "power-ranking",
+    "total-lfnys",
+    "total-episodes",
   ].includes(sortBy);
 
   return (

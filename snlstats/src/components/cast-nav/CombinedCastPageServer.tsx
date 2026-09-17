@@ -1,4 +1,3 @@
-// src/components/cast-nav/CombinedCastPageServer.tsx
 import { prisma } from "@/src/lib/prisma";
 import { CombinedCastPageClient } from "./CombinedCastPageClient";
 
@@ -64,6 +63,9 @@ async function fetchAndTransformCastMembers(
             averagePowerRanking: Number(
               member.careerStats.averagePowerRanking
             ),
+            totalLiveFromNewYorks: member.careerStats.totalLiveFromNewYorks,
+            totalSeasons: member.careerStats.totalSeasons,
+            totalEpisodes: member.careerStats.totalEpisodes,
           }
         : null,
     };
