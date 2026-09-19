@@ -1,7 +1,6 @@
 // src/app/cast/[castMemberSlug]/page.tsx
 import { prisma } from "@/src/lib/prisma";
 import { notFound } from "next/navigation";
-import { Header } from "@/src/components/ui/Header";
 import { CastMemberHeroSection } from "@/src/components/cast/career-focus/CastMemberHeroSection";
 import { CareerStatsSummary } from "@/src/components/cast/career-focus/CareerStatsSummary";
 import { SeasonStatsChartServer } from "@/src/components/cast/career-focus/SeasonStatsChartServer";
@@ -124,7 +123,6 @@ export default async function CastMemberPage({ params }: Props) {
 
   return (
     <>
-      <Header />
       <div className="w-full bg-neutral">
         {/* Hero Section */}
         <CastMemberHeroSection

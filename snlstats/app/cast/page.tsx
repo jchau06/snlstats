@@ -1,6 +1,5 @@
 // src/app/cast/all/page.tsx
 import { Metadata } from "next";
-import { Header } from "@/src/components/ui/Header";
 import { CombinedCastPageServer } from "@/src/components/cast-nav/CombinedCastPageServer";
 
 export const metadata: Metadata = {
@@ -11,7 +10,6 @@ export const metadata: Metadata = {
 export default async function AllCastPage() {
   return (
     <>
-      <Header />
       <main className="min-h-screen bg-neutral">
         <div className="container mx-auto px-4 py-12">
           <CombinedCastPageServer />

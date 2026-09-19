@@ -6,7 +6,6 @@ import { Button } from "@/src/components/ui";
 import { HeroSection } from "@/src/components/episode/HeroSection";
 import { LfnyBadge } from "@/src/components/episode/LiveFromNewYorkBadge";
 import { PerformanceAnalyticsSection } from "@/src/components/episode/PerformanceAnalyticsSection";
-import { Header } from "@/src/components/ui/Header";
 
 interface Props {
   params: Promise<{
@@ -85,7 +84,6 @@ export default async function EpisodePage({ params }: Props) {
 
   return (
     <>
-      <Header />
       <div className="w-full bg-neutral">
         {/* Hero Section */}
         <div className="px-4 md:px-8 py-8">

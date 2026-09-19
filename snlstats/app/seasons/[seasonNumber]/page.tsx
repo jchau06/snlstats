@@ -1,7 +1,6 @@
 // src/app/seasons/[seasonNumber]/page.tsx
 import { prisma } from "@/src/lib/prisma";
 import { notFound } from "next/navigation";
-import { Header } from "@/src/components/ui/Header";
 import { SeasonHeroSection } from "@/src/components/season/SeasonHeroSection";
 import { EpisodeGrid } from "@/src/components/ui/EpisodeGrid";
 import { SeasonCastGrid } from "@/src/components/season/SeasonCastGrid";
@@ -175,7 +174,6 @@ export default async function SeasonPage({ params }: Props) {
 
   return (
     <>
-      <Header />
       <div className="w-full bg-neutral">
         {/* Hero Section */}
         <div className="px-4 md:px-8 py-8">

@@ -1,7 +1,6 @@
 // src/app/cast/[castMember]/[season]/page.tsx
 import { prisma } from "@/src/lib/prisma";
 import { notFound } from "next/navigation";
-import { Header } from "@/src/components/ui/Header";
 import { CastMemberSeasonHeroServer } from "@/src/components/cast/season-focus/CastMemberSeasonHeroServer";
 import { SeasonStatsSummary } from "@/src/components/cast/season-focus/SeasonStatsSummary";
 import { EpisodeStatsChartServer } from "@/src/components/cast/season-focus/EpisodeStatsChartServer";
@@ -92,7 +91,6 @@ export default async function CastMemberSeasonPage({ params }: Props) {
 
   return (
     <>
-      <Header />
       <div className="w-full bg-neutral">
         {/* Hero Section */}
         <CastMemberSeasonHeroServer
