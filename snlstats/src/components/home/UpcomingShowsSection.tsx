@@ -25,7 +25,7 @@ export async function UpcomingShowsSection() {
   return (
     <div className="relative w-full">
       {/* Badge */}
-      <div className="mb-6">
+      <div className="mb-4">
         <span className="inline-block bg-primary/10 border border-primary px-3 py-1 rounded-full text-primary font-mono font-bold text-xs uppercase">
           Shows Coming Up Next
         </span>
@@ -39,25 +39,30 @@ export async function UpcomingShowsSection() {
               key={show.id}
               className="border border-secondary/30 rounded-lg bg-secondary/20 backdrop-blur-sm p-4 sm:p-5 hover:border-primary transition-colors duration-base group"
             >
-              {/* Date */}
+              {/* Date and Episode */}
               <div className="mb-3">
                 <p className="text-[#8A8885] font-mono text-xs uppercase tracking-wide mb-1">
                   {formatDate(show.airDate)}
                 </p>
                 <p className="text-primary font-mono font-bold text-xs uppercase">
-                  EP {show.episodeNumber}
+                  Episode {show.episodeNumber}
                 </p>
               </div>
 
               {/* Host */}
-              <h3 className="font-heading text-xl sm:text-2xl font-bold text-tertiary mb-2 line-clamp-2 group-hover:text-primary transition-colors duration-base">
-                {show.host}
-              </h3>
+              <div className="mb-3">
+                <p className="text-[#8A8885] font-mono text-xs uppercase mb-1">
+                  Host
+                </p>
+                <h3 className="font-heading text-xl sm:text-2xl font-bold text-tertiary line-clamp-2 group-hover:text-primary transition-colors duration-base">
+                  {show.host}
+                </h3>
+              </div>
 
               {/* Musical Guest */}
-              <div className="pt-3 border-t border-secondary/20">
+              <div className="pt-2 border-t border-secondary/20">
                 <p className="text-[#8A8885] font-mono text-xs uppercase mb-1">
-                  Music
+                  Musical Guest
                 </p>
                 <p className="text-white text-sm font-sans">
                   {show.musicalGuest}

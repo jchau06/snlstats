@@ -38,9 +38,9 @@ export async function LatestEpisodeSection() {
   return (
     <div className="relative w-full">
       {/* Badge */}
-      <div className="mb-6">
+      <div className="mb-4">
         <span className="inline-block bg-primary/10 border border-primary px-3 py-1 rounded-full text-primary font-mono font-bold text-xs uppercase">
-          Latest Episode Analysis
+          Latest Episode
         </span>
       </div>
 
@@ -70,17 +70,22 @@ export async function LatestEpisodeSection() {
               </span>
             </div>
 
-            {/* Host Name */}
-            <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              {(latestEpisode.host || "TBA").toUpperCase()}
-            </h2>
+            {/* Episode Label & Host Name */}
+            <div className="mb-4">
+              <p className="text-primary font-mono font-bold text-xs uppercase tracking-wide mb-2">
+                Host:
+              </p>
+              <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+                {(latestEpisode.host || "TBA").toUpperCase()}
+              </h2>
+            </div>
 
             {/* Stats Grid */}
-            <div className="space-y-4 mb-6">
+            <div className="space-y-3 mb-6">
               {/* Air Date */}
               <div>
                 <p className="text-[#8A8885] font-mono text-xs uppercase mb-1">
-                  Aired
+                  Aired:
                 </p>
                 <p className="text-tertiary font-sans text-base sm:text-lg">
                   {formattedDate}
@@ -90,7 +95,7 @@ export async function LatestEpisodeSection() {
               {/* Musical Guest */}
               <div>
                 <p className="text-[#8A8885] font-mono text-xs uppercase mb-1">
-                  Musical Guest
+                  Musical Guest:
                 </p>
                 <p className="text-tertiary font-sans text-base sm:text-lg">
                   {latestEpisode.musicalGuest || "TBA"}
@@ -100,7 +105,7 @@ export async function LatestEpisodeSection() {
 
             {/* CTA Link */}
             <a
-              href={`/episodes/season-${latestEpisode.season.seasonNumber}/episode-${latestEpisode.episodeNumber}`}
+              href={`/seasons/${latestEpisode.season.seasonNumber}/episodes/${latestEpisode.episodeNumber}`}
               className="inline-flex items-center gap-2 w-fit text-primary hover:text-tertiary transition-colors duration-base font-mono font-bold text-sm uppercase"
             >
               View Details
