@@ -2,7 +2,7 @@
 import { prisma } from "@/src/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@/src/components/ui";
+import { Button } from "@/src/components/ui/Button";
 import { HeroSection } from "@/src/components/episode/HeroSection";
 import { LfnyBadge } from "@/src/components/episode/LiveFromNewYorkBadge";
 import { PerformanceAnalyticsSection } from "@/src/components/episode/PerformanceAnalyticsSection";

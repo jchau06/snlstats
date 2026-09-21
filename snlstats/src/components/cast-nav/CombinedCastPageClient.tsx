@@ -229,7 +229,7 @@ export function CombinedCastPageClient({
           onChange={(e) => setSortBy(e.target.value as SortType)}
           className="bg-neutral border border-secondary text-tertiary px-4 py-2 rounded-sm font-mono text-xs uppercase font-bold hover:border-primary transition-colors cursor-pointer shrink-0"
         >
-          <option value="default">Sort By: Alphabetical</option>
+          <option value="default">Alphabetical</option>
           <option value="earliest-hires">Earliest Hires</option>
           <option value="latest-hires">Latest Hires</option>
           <option value="avg-sketches">Average Sketches</option>

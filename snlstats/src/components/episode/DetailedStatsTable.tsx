@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { Table } from "../ui";
+import { Table } from "@/src/components/ui/Table";
 import Image from "next/image";
 
 interface CastPerformanceData {

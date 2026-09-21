@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Section } from '@/src/components/ui';
+import { Section } from '@/src/components/ui/Section';
 import { PerformanceMetricToggle } from './PerformanceMetricToggle';
 import { PerformanceBarChart } from './PerformanceBarChart';
 import { DetailedStatsTable } from './DetailedStatsTable';
