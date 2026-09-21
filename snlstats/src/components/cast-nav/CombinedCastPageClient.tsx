@@ -6,6 +6,8 @@ import { CastMemberCard } from "./CastMemberCard";
 
 interface CombinedCastPageClientProps {
   castMembers: CastMemberData[];
+  sortBy: SortType;  
+  onSortChange: (sort: SortType) => void;
   currentCastMembers: CastMemberData[];
   alumniCastMembers: CastMemberData[];
 }
@@ -159,7 +161,7 @@ export function CombinedCastPageClient({
       ].includes(sortBy)
     ) {
       members.forEach((member, index) => {
-        (member as any).rank = index + 1;
+        member.rank = index + 1;
       });
     }
 
@@ -254,7 +256,7 @@ export function CombinedCastPageClient({
               key={member.id}
               member={member}
               sortBy={sortBy}
-              rank={(member as any).rank}
+              rank={index + 1}
               index={index}
             />
           ))}

@@ -25,14 +25,17 @@ const formatScreenTime = (seconds: number): string => {
   return `${secs}s`;
 };
 
-const getSeasonDisplay = (joinSeason?: number, leaveSeason?: number): string => {
+const getSeasonDisplay = (
+  joinSeason?: number,
+  leaveSeason?: number,
+): string => {
   if (!joinSeason) return "—";
-  
+
   if (!leaveSeason) {
     // Current cast member
     return `Season ${joinSeason} - Present`;
   }
-  
+
   // Alumni: just show season range
   return `Season ${joinSeason} - ${leaveSeason}`;
 };

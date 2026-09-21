@@ -37,13 +37,12 @@ export async function CastMemberNavigationPageServer({
   } else {
     // Current cast: leaveSeason is null (not alumni)
     filteredCastMembers = castMembers.filter(
-      (m) => m.leaveSeason === null && m.status !== "alumni"
+      (m) => m.leaveSeason === null && m.status !== "alumni",
     );
   }
 
   // Transform data for client component
   const transformedCastMembers = filteredCastMembers.map((member) => {
-    // Get season cast info for current season (most recent)
     const currentSeasonCast = member.seasonCast
       ? member.seasonCast[member.seasonCast.length - 1]
       : null;
@@ -52,10 +51,10 @@ export async function CastMemberNavigationPageServer({
       id: member.id,
       name: member.name,
       slug: member.slug,
-      headshot: member.headshot,
+      headshot: member.headshot ?? undefined, // Convert null to undefined
       status: member.status,
-      joinSeason: member.joinSeason,
-      leaveSeason: member.leaveSeason,
+      joinSeason: member.joinSeason ?? undefined,
+      leaveSeason: member.leaveSeason ?? undefined,
       seasonCastStatus: currentSeasonCast?.status as
         | "repertory"
         | "featured"
@@ -63,18 +62,19 @@ export async function CastMemberNavigationPageServer({
       careerStats: member.careerStats
         ? {
             totalAppearances: member.careerStats.totalAppearances,
-            totalScreenTimeSeconds:
-              member.careerStats.totalScreenTimeSeconds,
-            averageScreenTimeSeconds:
-              Number(member.careerStats.averageScreenTimeSeconds),
+            totalScreenTimeSeconds: member.careerStats.totalScreenTimeSeconds,
+            averageScreenTimeSeconds: Number(
+              member.careerStats.averageScreenTimeSeconds,
+            ),
             averageAppearancesPerEp: Number(
-              member.careerStats.averageAppearancesPerEp
+              member.careerStats.averageAppearancesPerEp,
             ),
-            averagePowerRanking: Number(
-              member.careerStats.averagePowerRanking
-            ),
+            averagePowerRanking: Number(member.careerStats.averagePowerRanking),
+            totalLiveFromNewYorks: member.careerStats.totalLiveFromNewYorks,
+            totalSeasons: member.careerStats.totalSeasons,
+            totalEpisodes: member.careerStats.totalEpisodes,
           }
-        : null,
+        : undefined, // Convert null to undefined
     };
   });
 

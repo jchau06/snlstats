@@ -1,5 +1,5 @@
 import { prisma } from "@/src/lib/prisma";
-import { CombinedCastPageClient } from "./CombinedCastPageClient";
+import { CombinedCastPageWrapper } from "./CombinedCastPageWrapper";
 
 async function fetchAndTransformCastMembers() {
   const castMembers = await prisma.castMember.findMany({
@@ -29,10 +29,10 @@ async function fetchAndTransformCastMembers() {
       id: member.id,
       name: member.name,
       slug: member.slug,
-      headshot: member.headshot,
+      headshot: member.headshot ?? undefined,
       status: member.status,
-      joinSeason: member.joinSeason,
-      leaveSeason: member.leaveSeason,
+      joinSeason: member.joinSeason ?? undefined,
+      leaveSeason: member.leaveSeason ?? undefined,
       seasonCastStatus: currentSeasonCast?.status as
         | "repertory"
         | "featured"
@@ -55,7 +55,7 @@ async function fetchAndTransformCastMembers() {
             totalSeasons: member.careerStats.totalSeasons,
             totalEpisodes: member.careerStats.totalEpisodes,
           }
-        : null,
+        : undefined,
     };
   });
 }
@@ -64,7 +64,7 @@ export async function CombinedCastPageServer() {
   const allCastMembers = await fetchAndTransformCastMembers();
 
   const currentCastMembers = allCastMembers.filter(
-    (m) => m.leaveSeason === null && m.status !== "alumni"
+    (m) => !m.leaveSeason && m.status !== "alumni"
   );
 
   const alumniCastMembers = allCastMembers.filter(
@@ -72,7 +72,7 @@ export async function CombinedCastPageServer() {
   );
 
   return (
-    <CombinedCastPageClient
+    <CombinedCastPageWrapper
       castMembers={allCastMembers}
       currentCastMembers={currentCastMembers}
       alumniCastMembers={alumniCastMembers}

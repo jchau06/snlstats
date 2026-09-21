@@ -37,8 +37,7 @@ export function AlumniSection({
         // For alumni, check if they were active during this season
         if (!member.joinSeason || !member.leaveSeason) return false;
         return (
-          member.joinSeason <= seasonNum &&
-          member.leaveSeason >= seasonNum
+          member.joinSeason <= seasonNum && member.leaveSeason >= seasonNum
         );
       }
 
@@ -77,14 +76,14 @@ export function AlumniSection({
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-neutral border border-secondary text-tertiary px-4 py-2 rounded-sm font-mono text-xs uppercase placeholder-[#666] hover:border-primary focus:border-primary focus:outline-none transition-colors"
           />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-tertiary hover:text-primary"
-              >
-                ✕
-              </button>
-            )}
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-tertiary hover:text-primary"
+            >
+              ✕
+            </button>
+          )}
         </div>
 
         {/* Sort Dropdown */}
@@ -93,7 +92,7 @@ export function AlumniSection({
           onChange={(e) => onSortChange(e.target.value as SortType)}
           className="bg-neutral border border-secondary text-tertiary px-4 py-2 rounded-sm font-mono text-xs uppercase font-bold hover:border-primary transition-colors cursor-pointer whitespace-nowrap"
         >
-          <option value="default">Sort By: Alphabetical</option>
+          <option value="default">Alphabetical</option>
           <option value="earliest-hires">Earliest Hires</option>
           <option value="latest-hires">Latest Hires</option>
           <option value="avg-sketches">Average Sketches</option>
