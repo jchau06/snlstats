@@ -9,6 +9,7 @@ interface CastMemberCardProps {
   member: CastMemberData;
   sortBy: SortType;
   rank?: number;
+  index?: number;
 }
 
 const formatScreenTime = (seconds: number): string => {
@@ -40,6 +41,7 @@ export function CastMemberCard({
   member,
   sortBy,
   rank,
+  index = 999,
 }: CastMemberCardProps) {
   const getCardStats = () => {
     const stats = member.careerStats;
@@ -107,6 +109,9 @@ export function CastMemberCard({
     "total-episodes",
   ].includes(sortBy);
 
+  // Prioritize first ~15 cards visible on load
+  const shouldPrioritize = index < 15;
+
   return (
     <Link href={`/cast/${member.slug}`} className="group">
       <div className="flex flex-col h-full">
@@ -120,7 +125,7 @@ export function CastMemberCard({
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-base"
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
-                priority={false}
+                priority={shouldPrioritize}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-10" />
             </>

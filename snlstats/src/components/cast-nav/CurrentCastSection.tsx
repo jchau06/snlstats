@@ -65,7 +65,9 @@ export function CombinedCastPageClient({
           }
 
           // Alumni: must be within their season range
-          return member.joinSeason <= seasonNum && member.leaveSeason >= seasonNum;
+          return (
+            member.joinSeason <= seasonNum && member.leaveSeason >= seasonNum
+          );
         }
 
         return false;
@@ -76,7 +78,7 @@ export function CombinedCastPageClient({
     switch (sortBy) {
       case "default":
         members.sort((a, b) =>
-          getLastName(a.name).localeCompare(getLastName(b.name))
+          getLastName(a.name).localeCompare(getLastName(b.name)),
         );
         break;
       case "earliest-hires":
@@ -97,49 +99,49 @@ export function CombinedCastPageClient({
         members.sort(
           (a, b) =>
             (b.careerStats?.averageAppearancesPerEp || 0) -
-            (a.careerStats?.averageAppearancesPerEp || 0)
+            (a.careerStats?.averageAppearancesPerEp || 0),
         );
         break;
       case "total-sketches":
         members.sort(
           (a, b) =>
             (b.careerStats?.totalAppearances || 0) -
-            (a.careerStats?.totalAppearances || 0)
+            (a.careerStats?.totalAppearances || 0),
         );
         break;
       case "avg-screen-time":
         members.sort(
           (a, b) =>
             (b.careerStats?.averageScreenTimeSeconds || 0) -
-            (a.careerStats?.averageScreenTimeSeconds || 0)
+            (a.careerStats?.averageScreenTimeSeconds || 0),
         );
         break;
       case "total-screen-time":
         members.sort(
           (a, b) =>
             (b.careerStats?.totalScreenTimeSeconds || 0) -
-            (a.careerStats?.totalScreenTimeSeconds || 0)
+            (a.careerStats?.totalScreenTimeSeconds || 0),
         );
         break;
       case "total-episodes":
         members.sort(
           (a, b) =>
             (b.careerStats?.totalEpisodes || 0) -
-            (a.careerStats?.totalEpisodes || 0)
+            (a.careerStats?.totalEpisodes || 0),
         );
         break;
       case "power-ranking":
         members.sort(
           (a, b) =>
             (b.careerStats?.averagePowerRanking || 0) -
-            (a.careerStats?.averagePowerRanking || 0)
+            (a.careerStats?.averagePowerRanking || 0),
         );
         break;
       case "total-lfnys":
         members.sort(
           (a, b) =>
             (b.careerStats?.totalLiveFromNewYorks || 0) -
-            (a.careerStats?.totalLiveFromNewYorks || 0)
+            (a.careerStats?.totalLiveFromNewYorks || 0),
         );
         break;
     }
@@ -172,7 +174,8 @@ export function CombinedCastPageClient({
           CAST MEMBERS
         </h1>
         <p className="text-tertiary text-sm">
-          Archive explorer tracking performers, sketch counts, screen time, and power rankings across all seasons.
+          Archive explorer tracking performers, sketch counts, screen time, and
+          power rankings across all seasons.
         </p>
       </div>
 
@@ -239,18 +242,20 @@ export function CombinedCastPageClient({
 
       {/* Result Count */}
       <div className="text-tertiary text-sm">
-        Showing {filteredAndSortedMembers.length} of {displayMembers.length} cast members
+        Showing {filteredAndSortedMembers.length} of {displayMembers.length}{" "}
+        cast members
       </div>
 
       {/* Cast Grid */}
       {filteredAndSortedMembers.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
-          {filteredAndSortedMembers.map((member) => (
+          {filteredAndSortedMembers.map((member, index) => (
             <CastMemberCard
               key={member.id}
               member={member}
               sortBy={sortBy}
               rank={(member as any).rank}
+              index={index}
             />
           ))}
         </div>

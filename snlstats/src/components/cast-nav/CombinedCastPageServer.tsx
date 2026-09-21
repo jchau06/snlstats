@@ -1,9 +1,7 @@
 import { prisma } from "@/src/lib/prisma";
 import { CombinedCastPageClient } from "./CombinedCastPageClient";
 
-async function fetchAndTransformCastMembers(
-  filter?: "current" | "alumni"
-) {
+async function fetchAndTransformCastMembers() {
   const castMembers = await prisma.castMember.findMany({
     include: {
       seasonCast: {
@@ -22,17 +20,7 @@ async function fetchAndTransformCastMembers(
     orderBy: { name: "asc" },
   });
 
-  let filteredMembers = castMembers;
-
-  if (filter === "current") {
-    filteredMembers = castMembers.filter(
-      (m) => m.leaveSeason === null && m.status !== "alumni"
-    );
-  } else if (filter === "alumni") {
-    filteredMembers = castMembers.filter((m) => m.status === "alumni");
-  }
-
-  return filteredMembers.map((member) => {
+  return castMembers.map((member) => {
     const currentSeasonCast = member.seasonCast
       ? member.seasonCast[member.seasonCast.length - 1]
       : null;
@@ -73,13 +61,15 @@ async function fetchAndTransformCastMembers(
 }
 
 export async function CombinedCastPageServer() {
-  // Fetch all three datasets
-  const [allCastMembers, currentCastMembers, alumniCastMembers] =
-    await Promise.all([
-      fetchAndTransformCastMembers(),
-      fetchAndTransformCastMembers("current"),
-      fetchAndTransformCastMembers("alumni"),
-    ]);
+  const allCastMembers = await fetchAndTransformCastMembers();
+
+  const currentCastMembers = allCastMembers.filter(
+    (m) => m.leaveSeason === null && m.status !== "alumni"
+  );
+
+  const alumniCastMembers = allCastMembers.filter(
+    (m) => m.status === "alumni"
+  );
 
   return (
     <CombinedCastPageClient

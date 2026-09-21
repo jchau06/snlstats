@@ -8,15 +8,16 @@ export const metadata: Metadata = {
 };
 
 interface SeasonsPageProps {
-  searchParams?: {
+  searchParams?: Promise<{
     version?: "us" | "uk";
-  };
+  }>;
 }
 
 export default async function SeasonsPage({
   searchParams,
 }: SeasonsPageProps) {
-  const version = (searchParams?.version as "us" | "uk") || "us";
+  const params = await searchParams;
+  const version = (params?.version as "us" | "uk") || "us";
 
   return (
     <>

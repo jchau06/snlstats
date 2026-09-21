@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import Link from "next/link";
 import { CastMemberData, SortType } from "./CastMemberNavigationPageClient";
 import { CastMemberCard } from "./CastMemberCard";
 
@@ -53,12 +54,12 @@ export function AlumniSection({
           <h1 className="font-heading text-4xl md:text-5xl font-bold text-white">
             FULL ALUMNI DIRECTORY
           </h1>
-          <a
+          <Link
             href="/cast"
             className="text-tertiary hover:text-primary text-sm font-mono uppercase font-bold transition-colors"
           >
             ← Back
-          </a>
+          </Link>
         </div>
         <p className="text-tertiary text-sm">
           {filteredCastMembers.length} Alumni Total
@@ -113,14 +114,15 @@ export function AlumniSection({
               key={member.id}
               member={member}
               sortBy={sortBy}
-              rank={(member as any).rank}
+              rank={index + 1}
+              index={index}
             />
           ))}
         </div>
       ) : (
         <div className="text-center py-12">
           <p className="text-tertiary">
-            No cast members found matching "{searchQuery}"
+            No cast members found matching &quot;{searchQuery}&quot;
           </p>
         </div>
       )}

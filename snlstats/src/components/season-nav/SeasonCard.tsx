@@ -34,7 +34,7 @@ export function SeasonCard({ season }: SeasonCardProps) {
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover group-hover:scale-105 transition-transform duration-base"
-            priority={false}
+            priority={true}
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-secondary to-secondary/50 flex items-center justify-center">
