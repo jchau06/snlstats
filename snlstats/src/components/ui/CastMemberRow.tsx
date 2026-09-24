@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 interface CastMemberRowProps {
   name: string;
   slug: string;
@@ -11,7 +9,6 @@ interface CastMemberRowProps {
 
 export function CastMemberRow({
   name,
-  slug,
   headshot,
   statValue,
   onClick,

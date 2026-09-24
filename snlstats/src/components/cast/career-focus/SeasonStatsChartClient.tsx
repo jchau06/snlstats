@@ -3,6 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
+import type { ContentType } from "recharts/types/component/Tooltip";
 
 interface ChartData {
   seasonNumber: number;
@@ -88,9 +89,16 @@ const getSubtitle = (metric: MetricType, dataType: DataType): string => {
   return `${metricName} ${dataName} by season`;
 };
 
-const CustomTooltip = ({ active, payload, metric, dataType }: any) => {
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{ payload: ChartData }>;
+  metric: MetricType;
+  dataType: DataType;
+}
+
+const CustomTooltip = ({ active, payload, metric, dataType }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
-    const data = payload[0].payload;
+    const data = payload[0].payload as ChartData;
 
     const value = getMetricValue(data, metric, dataType);
 
@@ -318,14 +326,19 @@ export function SeasonStatsChartClient({ data }: SeasonStatsChartClientProps) {
             label={(props) => {
               const { x, y, width, value, index } = props;
 
-              const entry = sortedData[index];
-
               if (
-                !entry ||
+                index === undefined ||
                 typeof x !== "number" ||
                 typeof y !== "number" ||
-                typeof width !== "number"
+                typeof width !== "number" ||
+                typeof value !== "number"
               ) {
+                return null;
+              }
+
+              const entry = sortedData[index];
+
+              if (!entry) {
                 return null;
               }
 

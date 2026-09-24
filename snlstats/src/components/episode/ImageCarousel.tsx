@@ -20,25 +20,25 @@ export function ImageCarousel({
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Check scroll position to show/hide arrows
-  const checkScroll = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } =
-        scrollContainerRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-
-      // Calculate current slide based on scroll position
-      // Use Math.round and clamp to valid range to handle edge cases
-      const slideIndex = Math.min(
-        images.length - 1,
-        Math.round(scrollLeft / clientWidth)
-      );
-      setCurrentSlide(slideIndex);
-    }
-  };
-
   useEffect(() => {
+    // Check scroll position to show/hide arrows
+    const checkScroll = () => {
+      if (scrollContainerRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } =
+          scrollContainerRef.current;
+        setCanScrollLeft(scrollLeft > 0);
+        setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+
+        // Calculate current slide based on scroll position
+        // Use Math.round and clamp to valid range to handle edge cases
+        const slideIndex = Math.min(
+          images.length - 1,
+          Math.round(scrollLeft / clientWidth)
+        );
+        setCurrentSlide(slideIndex);
+      }
+    };
+
     checkScroll();
     const container = scrollContainerRef.current;
     if (container) {
@@ -49,7 +49,7 @@ export function ImageCarousel({
         window.removeEventListener("resize", checkScroll);
       };
     }
-  }, []);
+  }, [images.length]);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {

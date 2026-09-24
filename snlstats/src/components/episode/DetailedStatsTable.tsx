@@ -175,7 +175,6 @@ export function DetailedStatsTable({
           <div>
             <h3 className="font-subheading text-h4 text-tertiary font-bold">
               DETAILED CAST STATS{" "}
-              <span className="text-primary text-sm font-mono">S51E03</span>
             </h3>
           </div>
 

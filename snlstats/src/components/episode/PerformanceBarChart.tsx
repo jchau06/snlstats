@@ -89,14 +89,20 @@ const getLabelFontSize = () => {
   return 12;
 };
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{ payload: { name: string; value: number } }>;
+  metric?: "screenTime" | "sketchCount" | "powerRanking";
+}
+
 // Move CustomTooltip outside component to avoid recreation
-const CustomTooltip = ({ active, payload, metric }: any) => {
+const CustomTooltip = ({ active, payload, metric }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
-    let displayValue = data.value;
+    let displayValue: string | number = data.value;
 
     if (metric === "screenTime") {
-      displayValue = formatTimeLabel(displayValue);
+      displayValue = formatTimeLabel(data.value);
     }
 
     return (
@@ -312,6 +318,16 @@ export function PerformanceBarChart({
                 radius={[0, 8, 8, 0]}
                 label={(props) => {
                   const { x, y, width, value } = props;
+
+                  if (
+                    typeof x !== "number" ||
+                    typeof y !== "number" ||
+                    typeof width !== "number" ||
+                    typeof value !== "number"
+                  ) {
+                    return null;
+                  }
+
                   let displayValue = String(value);
 
                   if (metric === "screenTime") {
