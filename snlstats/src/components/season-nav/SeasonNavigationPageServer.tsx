@@ -27,8 +27,11 @@ export async function SeasonNavigationPageServer({
   const liveSeasonNumber = seasons[0]?.seasonNumber;
 
   // Transform data for client component
+  // Convert null to undefined to match client component types
   const transformedSeasons = seasons.map((season) => ({
     ...season,
+    heroImageUrl: season.heroImageUrl ?? undefined,
+    navImageUrl: season.navImageUrl ?? undefined,
     isLive: season.seasonNumber === liveSeasonNumber,
   }));
 
