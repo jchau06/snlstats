@@ -1,86 +1,86 @@
 {
   "season": 50,
-  "episode": 1,
-  "airDate": "2024-09-28",
-  "host": "Jean Smart",
-  "musicalGuest": "Jelly Roll",
-  "liveFromNewYork": [],
+  "episode": 19,
+  "airDate": "2025-05-10",
+  "host": "Walton Goggins",
+  "musicalGuest": "Arcade Fire",
+  "liveFromNewYork": ["James Austin Johnson", "Colin Jost"],
   "castPerformance": [
     {
       "name": "Colin Jost",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 660,
+      "sketchCount": 2,
+      "powerRanking": 149.7,
       "status": "present"
     },
     {
       "name": "Bowen Yang",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 268,
+      "sketchCount": 4,
+      "powerRanking": 83.2,
       "status": "present"
     },
     {
       "name": "Sarah Sherman",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 310,
+      "sketchCount": 2,
+      "powerRanking": 76.3,
       "status": "present"
     },
     {
       "name": "Andrew Dismukes",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 225,
+      "sketchCount": 3,
+      "powerRanking": 70.4,
       "status": "present"
     },
     {
       "name": "James Austin Johnson",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 399,
+      "sketchCount": 4,
+      "powerRanking": 109.2,
       "status": "present"
     },
     {
       "name": "Ego Nwodim",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 190,
+      "sketchCount": 1,
+      "powerRanking": 33.7,
       "status": "present"
     },
     {
       "name": "Heidi Gardner",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 545,
+      "sketchCount": 5,
+      "powerRanking": 148.7,
       "status": "present"
     },
     {
       "name": "Mikey Day",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 326,
+      "sketchCount": 3,
+      "powerRanking": 96.0,
       "status": "present"
     },
     {
       "name": "Marcello Hernandez",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 290,
+      "sketchCount": 2,
+      "powerRanking": 80.5,
       "status": "present"
     },
     {
       "name": "Kenan Thompson",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 87,
+      "sketchCount": 3,
+      "powerRanking": 38.8,
       "status": "present"
     },
     {
       "name": "Michael Che",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 250,
+      "sketchCount": 1,
+      "powerRanking": 62.1,
       "status": "present"
     },
     {
@@ -92,30 +92,30 @@
     },
     {
       "name": "Michael Longfellow",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 109,
+      "sketchCount": 2,
+      "powerRanking": 37.9,
       "status": "present"
     },
     {
       "name": "Ashley Padilla",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 213,
+      "sketchCount": 3,
+      "powerRanking": 51.3,
       "status": "present"
     },
     {
       "name": "Emil Wakim",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 10,
+      "sketchCount": 1,
+      "powerRanking": 6.3,
       "status": "present"
     },
     {
       "name": "Jane Wickline",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 201,
+      "sketchCount": 2,
+      "powerRanking": 59.5,
       "status": "present"
     },
     {

@@ -1,128 +1,128 @@
 {
   "season": 50,
-  "episode": 1,
-  "airDate": "2024-09-28",
-  "host": "Jean Smart",
-  "musicalGuest": "Jelly Roll",
-  "liveFromNewYork": [],
+  "episode": 20,
+  "airDate": "2025-05-17",
+  "host": "Scarlett Johansson",
+  "musicalGuest": "Bad Bunny",
+  "liveFromNewYork": ["James Austin Johnson"],
   "castPerformance": [
     {
       "name": "Colin Jost",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 627,
+      "sketchCount": 2,
+      "powerRanking": 126.1,
       "status": "present"
     },
     {
       "name": "Bowen Yang",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 429,
+      "sketchCount": 3,
+      "powerRanking": 89.8,
       "status": "present"
     },
     {
       "name": "Sarah Sherman",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 356,
+      "sketchCount": 4,
+      "powerRanking": 72.9,
       "status": "present"
     },
     {
       "name": "Andrew Dismukes",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 181,
+      "sketchCount": 3,
+      "powerRanking": 40.7,
       "status": "present"
     },
     {
       "name": "James Austin Johnson",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 408,
+      "sketchCount": 4,
+      "powerRanking": 93.9,
       "status": "present"
     },
     {
       "name": "Ego Nwodim",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 496,
+      "sketchCount": 6,
+      "powerRanking": 127.2,
       "status": "present"
     },
     {
       "name": "Heidi Gardner",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 238,
+      "sketchCount": 5,
+      "powerRanking": 71.3,
       "status": "present"
     },
     {
       "name": "Mikey Day",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 239,
+      "sketchCount": 3,
+      "powerRanking": 56.3,
       "status": "present"
     },
     {
       "name": "Marcello Hernandez",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 337,
+      "sketchCount": 4,
+      "powerRanking": 77.8,
       "status": "present"
     },
     {
       "name": "Kenan Thompson",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 452,
+      "sketchCount": 4,
+      "powerRanking": 103.7,
       "status": "present"
     },
     {
       "name": "Michael Che",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 539,
+      "sketchCount": 1,
+      "powerRanking": 103.3,
       "status": "present"
     },
     {
       "name": "Chloe Fineman",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 199,
+      "sketchCount": 2,
+      "powerRanking": 45.2,
       "status": "present"
     },
     {
       "name": "Michael Longfellow",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 47,
+      "sketchCount": 1,
+      "powerRanking": 15.7,
       "status": "present"
     },
     {
       "name": "Ashley Padilla",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 232,
+      "sketchCount": 3,
+      "powerRanking": 57.8,
       "status": "present"
     },
     {
       "name": "Emil Wakim",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 201,
+      "sketchCount": 3,
+      "powerRanking": 54.5,
       "status": "present"
     },
     {
       "name": "Jane Wickline",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 174,
+      "sketchCount": 4,
+      "powerRanking": 46.0,
       "status": "present"
     },
     {
       "name": "Devon Walker",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0.0,
+      "screenTimeSeconds": 88,
+      "sketchCount": 4,
+      "powerRanking": 33.5,
       "status": "present"
     }
   ]
