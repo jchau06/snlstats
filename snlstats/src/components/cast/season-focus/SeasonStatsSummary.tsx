@@ -69,7 +69,7 @@ export function SeasonStatsSummary({
           {/* Live From New York's */}
           <div className="border border-secondary/50 px-6 py-6 rounded-sm bg-secondary/20">
             <p className="stat-label text-xs uppercase mb-3 text-white/60">
-              Live From NY's
+              Live From NY&apos;s
             </p>
             <p className="font-mono text-3xl md:text-4xl font-bold text-white">
               {lfnyCount}

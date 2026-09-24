@@ -69,12 +69,14 @@ export async function EpisodeStatsChartServer({
   // Transform to chart data with rankings
   const data = performances.map((perf) => {
     // If host == musical guest, only show host (double-duty)
-    let hostMusicalGuest: string;
-    if (perf.episode.host === perf.episode.musicalGuest) {
-      hostMusicalGuest = perf.episode.host;
-    } else {
-      hostMusicalGuest = `${perf.episode.host}${perf.episode.musicalGuest ? " / " + perf.episode.musicalGuest : ""}`;
-    }
+    const host = perf.episode.host ?? "Unknown";
+    const guest = perf.episode.musicalGuest;
+
+    const hostMusicalGuest: string = host === guest
+      ? host
+      : guest
+        ? `${host} / ${guest}`
+        : host;
 
     // Get rankings for this episode
     const episodePerfs = performancesByEpisode.get(perf.episode.id) || [];
