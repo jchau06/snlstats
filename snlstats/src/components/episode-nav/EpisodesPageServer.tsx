@@ -26,14 +26,18 @@ export async function EpisodesPageServer({
   const liveSeasonNumber = seasons[0]?.seasonNumber;
 
   // Transform data for client component
+  // Convert null values to undefined (or defaults) to match client component types
   const transformedSeasons = seasons.map((season) => ({
     ...season,
+    heroImageUrl: season.heroImageUrl ?? undefined,
+    navImageUrl: season.navImageUrl ?? undefined,
     isLive: season.seasonNumber === liveSeasonNumber,
   }));
 
   const transformedEpisodes = episodes.map((episode) => ({
     ...episode,
-    airDate: episode.airDate,
+    host: episode.host ?? "",
+    musicalGuest: episode.musicalGuest ?? "",
     seasonNumber: episode.season.seasonNumber,
   }));
 
