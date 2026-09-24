@@ -59,15 +59,19 @@ export default async function EpisodePage({ params }: Props) {
 
   // Get LFNY cast with full details
   const lfnyCastMembers = episode.liveFromNewYork?.castMemberIds
-    ? await Promise.all(
-        episode.liveFromNewYork.castMemberIds.map(async (id) => {
-          const cm = await prisma.castMember.findUnique({
-            where: { id },
-            select: { id: true, name: true, slug: true },
-          });
-          return cm;
-        }),
-      ).then((members) => members.filter(Boolean) as any[])
+    ? (
+        await Promise.all(
+          episode.liveFromNewYork.castMemberIds.map((id) =>
+            prisma.castMember.findUnique({
+              where: { id },
+              select: { id: true, name: true, slug: true },
+            }),
+          ),
+        )
+      ).filter(
+        (member): member is { id: string; name: string; slug: string } =>
+          member !== null,
+      )
     : [];
 
   // Transform performance data for charts

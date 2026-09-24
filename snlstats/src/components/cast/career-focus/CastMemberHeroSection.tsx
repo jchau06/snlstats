@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 interface LeadershipBadge {
   category: "screenTime" | "sketches" | "powerRanking";
@@ -30,14 +31,12 @@ export function CastMemberHeroSection({
   leadershipBadges,
   className = "",
 }: CastMemberHeroSectionProps) {
-  // Format tenure display
   const getTenureDisplay = () => {
     if (!yearJoined) return "Unknown";
     if (yearLeft) return `${yearJoined} - ${yearLeft}`;
     return `${yearJoined} - Present`;
   };
 
-  // Map leadership categories to display labels
   const leadershipConfig: Record<
     string,
     { fullLabel: string; shortLabel: string }
@@ -64,11 +63,14 @@ export function CastMemberHeroSection({
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
           {/* Left: Headshot */}
           <div className="flex-shrink-0 w-full lg:w-80">
-            <div className="border border-secondary rounded-sm overflow-hidden bg-secondary/30">
-              <img
+            <div className="relative border border-secondary rounded-sm overflow-hidden bg-secondary/30 aspect-square">
+              <Image
                 src={headshot}
-                alt={name}
-                className="w-full aspect-square object-cover"
+                alt={`${name} headshot`}
+                fill
+                sizes="(max-width: 1024px) 100vw, 320px"
+                className="object-cover"
+                priority
               />
             </div>
           </div>
@@ -80,6 +82,7 @@ export function CastMemberHeroSection({
               <span className="stat-label text-xs uppercase font-mono text-primary">
                 {getTenureDisplay()}
               </span>
+
               {status && (
                 <div className="flex items-center gap-2 px-3 py-1.5 bg-secondary/30 border border-secondary/50 rounded-sm">
                   <span className="w-2 h-2 bg-primary rounded-full" />
@@ -126,7 +129,7 @@ export function CastMemberHeroSection({
               </div>
             </div>
 
-            {/* Bottom Row - Leadership Boxes (if present) */}
+            {/* Bottom Row - Leadership Boxes */}
             {leadershipBadges.length > 0 && (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-0">
                 {leadershipBadges.map((badge, idx) => (
@@ -137,6 +140,7 @@ export function CastMemberHeroSection({
                     <p className="stat-label text-xs uppercase mb-2 text-white/60">
                       {leadershipConfig[badge.category]?.fullLabel}
                     </p>
+
                     <p className="font-mono text-lg font-bold text-primary">
                       {badge.seasons.join(", ")}
                     </p>

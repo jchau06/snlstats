@@ -56,16 +56,6 @@ export async function CastMemberSeasonHeroServer({
     return null;
   }
 
-  // Fetch season leaders to get rankings
-  const seasonLeader = await prisma.seasonLeaders.findUnique({
-    where: {
-      seasonId_castMemberId: {
-        seasonId: season.id,
-        castMemberId,
-      },
-    },
-  });
-
   // Get all season stats to calculate rankings for this cast member
   const allSeasonStats = await prisma.seasonStats.findMany({
     where: { seasonId: season.id },

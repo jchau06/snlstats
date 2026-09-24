@@ -88,6 +88,7 @@ export function EpisodeGrid({
                         'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"%3E%3Crect fill="%23222222" width="400" height="225"/%3E%3C/svg%3E';
                     }}
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    loading="eager"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-[#8A8885] text-xs">

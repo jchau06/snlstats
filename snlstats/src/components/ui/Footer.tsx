@@ -60,7 +60,7 @@ export function Footer({ className = "" }: FooterProps) {
               <FooterLink href="/about">About</FooterLink>
               <FooterLink href="/methodology">Methodology</FooterLink>
               <FooterLink href="/data-sources">Data Sources</FooterLink>
-              <FooterLink href="https://github.com/yourusername/yourrepo" external>
+              <FooterLink href="https://github.com/jchau06/snlstats" external>
                 GitHub
               </FooterLink>
             </nav>

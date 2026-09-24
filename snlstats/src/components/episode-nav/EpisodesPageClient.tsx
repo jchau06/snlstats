@@ -42,7 +42,7 @@ export function EpisodesPageClient({
   const [globalSort, setGlobalSort] = useState<GlobalSortType>("latest");
   const [version, setVersion] = useState<VersionType>(currentVersion);
   const [expandedSeasons, setExpandedSeasons] = useState<Set<string>>(
-    new Set([seasons[0]?.id]) // Expand first season (usually the live one) by default
+    new Set()
   );
 
   const toggleSeasonExpanded = (seasonId: string) => {

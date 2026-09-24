@@ -1,16 +1,8 @@
 // src/components/cast/SeasonStatsChartClient.tsx
 "use client";
 
-import { useState } from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { useEffect, useRef, useState } from "react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 
 interface ChartData {
   seasonNumber: number;
@@ -41,36 +33,46 @@ const formatTimeLabel = (seconds: number): string => {
   if (hours > 0) {
     return `${hours}H ${minutes}M`;
   }
+
   return `${minutes}M ${secs}S`;
 };
 
 const getMetricValue = (
   entry: ChartData,
   metric: MetricType,
-  dataType: DataType
+  dataType: DataType,
 ): number => {
   if (metric === "screenTime") {
     return dataType === "totals"
       ? entry.totalScreenTimeSeconds
       : entry.averageScreenTimeSeconds;
-  } else if (metric === "segments") {
+  }
+
+  if (metric === "segments") {
     return dataType === "totals"
       ? entry.totalAppearances
       : entry.averageAppearances;
-  } else {
-    return entry.powerRankingSeason;
   }
+
+  return entry.powerRankingSeason;
 };
 
-const formatValue = (value: number, metric: MetricType, dataType: DataType): string => {
+const formatValue = (
+  value: number,
+  metric: MetricType,
+  dataType: DataType,
+): string => {
   if (metric === "screenTime") {
     return formatTimeLabel(value);
-  } else if (metric === "segments") {
-    // No decimals for totals, 2 decimals for averages
-    return dataType === "totals" ? Math.round(value).toString() : value.toFixed(2);
-  } else {
-    return value.toFixed(2);
   }
+
+  if (metric === "segments") {
+    return dataType === "totals"
+      ? Math.round(value).toString()
+      : value.toFixed(2);
+  }
+
+  return value.toFixed(2);
 };
 
 const getSubtitle = (metric: MetricType, dataType: DataType): string => {
@@ -80,35 +82,83 @@ const getSubtitle = (metric: MetricType, dataType: DataType): string => {
       : metric === "segments"
         ? "Segment count"
         : "Power ranking";
+
   const dataName = dataType === "totals" ? "totals" : "averages";
+
   return `${metricName} ${dataName} by season`;
 };
 
 const CustomTooltip = ({ active, payload, metric, dataType }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
+
     const value = getMetricValue(data, metric, dataType);
+
     return (
       <div className="bg-secondary border border-primary p-3 rounded-lg">
         <p className="font-sans font-semibold text-tertiary">
           S{data.seasonNumber} ({data.yearStarted}-{data.yearEnded})
         </p>
+
         <p className="font-mono text-primary font-bold">
           {formatValue(value, metric, dataType)}
         </p>
+
         <p className="font-mono text-white/60 text-sm">
           Rank: #{data.castMemberRankInSeason} / {data.castMembersInSeason}
         </p>
       </div>
     );
   }
+
   return null;
 };
 
 export function SeasonStatsChartClient({ data }: SeasonStatsChartClientProps) {
   const [metric, setMetric] = useState<MetricType>("screenTime");
+
   const [dataType, setDataType] = useState<DataType>("totals");
+
   const [sortBy, setSortBy] = useState<SortType>("latest");
+
+  /*
+   * Measure the chart's actual available width instead
+   * of using Recharts ResponsiveContainer.
+   *
+   * This avoids the -1 x -1 measurement warning while
+   * still allowing the chart to resize naturally.
+   */
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+
+  const [chartWidth, setChartWidth] = useState(800);
+
+  useEffect(() => {
+    const element = chartContainerRef.current;
+
+    if (!element) {
+      return;
+    }
+
+    const updateWidth = () => {
+      const width = element.getBoundingClientRect().width;
+
+      if (width > 0) {
+        setChartWidth(width);
+      }
+    };
+
+    // Initial measurement
+    updateWidth();
+
+    // Re-measure whenever the container changes size
+    const observer = new ResizeObserver(updateWidth);
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   if (!data || data.length === 0) {
     return (
@@ -123,16 +173,36 @@ export function SeasonStatsChartClient({ data }: SeasonStatsChartClientProps) {
     if (sortBy === "latest") {
       return b.seasonNumber - a.seasonNumber;
     }
+
     if (sortBy === "oldest") {
       return a.seasonNumber - b.seasonNumber;
     }
+
     const aVal = getMetricValue(a, metric, dataType);
+
     const bVal = getMetricValue(b, metric, dataType);
+
     return sortBy === "highest" ? bVal - aVal : aVal - bVal;
   });
 
-  // Calculate dynamic height based on data length
+  /*
+   * Keep the chart tall enough to comfortably display
+   * each season.
+   */
   const chartHeight = Math.max(200, data.length * 50);
+
+  /*
+   * The Y-axis already reserves space for the season
+   * labels, so we don't need a large left chart margin.
+   *
+   * On smaller screens, reduce the label width so the
+   * actual bars get more horizontal space.
+   */
+  const isMobile = chartWidth < 640;
+
+  const yAxisWidth = isMobile ? 115 : 140;
+
+  const chartRightMargin = isMobile ? 70 : 90;
 
   return (
     <div className="bg-secondary/80 backdrop-blur-sm border border-[#2C2C2A] p-6 rounded-lg">
@@ -143,15 +213,14 @@ export function SeasonStatsChartClient({ data }: SeasonStatsChartClientProps) {
           <h3 className="font-heading text-h3 text-tertiary font-bold">
             Stats Per Season
           </h3>
-          <p className="stat-label mt-2">
-            {getSubtitle(metric, dataType)}
-          </p>
+
+          <p className="stat-label mt-2">{getSubtitle(metric, dataType)}</p>
         </div>
 
-        {/* Right: Controls */}
+        {/* Controls */}
         <div className="flex flex-col sm:flex-row gap-3 flex-wrap">
           {/* Metric Buttons */}
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             {["screenTime", "segments", "powerRanking"].map((m) => (
               <button
                 key={m}
@@ -203,61 +272,83 @@ export function SeasonStatsChartClient({ data }: SeasonStatsChartClientProps) {
       </div>
 
       {/* Chart */}
-      <div className="w-full" style={{ height: `${chartHeight}px` }}>
-        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-          <BarChart
-            data={sortedData}
-            layout="vertical"
-            margin={{ top: 10, right: 150, left: 140, bottom: 10 }}
-          >
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke="#2C2C2A"
-              vertical={false}
-            />
-            <XAxis type="number" stroke="#2C2C2A" tick={false} axisLine={false} />
-            <YAxis
-              dataKey={(entry) =>
-                `S${entry.seasonNumber} (${entry.yearStarted}-${entry.yearEnded})`
+      <div ref={chartContainerRef} className="w-full overflow-hidden">
+        <BarChart
+          width={chartWidth}
+          height={chartHeight}
+          data={sortedData}
+          layout="vertical"
+          margin={{
+            top: 10,
+            right: chartRightMargin,
+            left: 0,
+            bottom: 10,
+          }}
+        >
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="#2C2C2A"
+            vertical={false}
+          />
+
+          <XAxis type="number" stroke="#2C2C2A" tick={false} axisLine={false} />
+
+          <YAxis
+            dataKey={(entry) =>
+              `S${entry.seasonNumber} (${entry.yearStarted}-${entry.yearEnded})`
+            }
+            type="category"
+            stroke="#B4B2A9"
+            width={yAxisWidth}
+            tick={{
+              fontSize: isMobile ? 11 : 12,
+            }}
+          />
+
+          <Tooltip
+            content={<CustomTooltip metric={metric} dataType={dataType} />}
+            cursor={{
+              fill: "rgba(255, 210, 0, 0.1)",
+            }}
+          />
+
+          <Bar
+            dataKey={(entry) => getMetricValue(entry, metric, dataType)}
+            radius={[0, 6, 6, 0]}
+            label={(props) => {
+              const { x, y, width, value, index } = props;
+
+              const entry = sortedData[index];
+
+              if (
+                !entry ||
+                typeof x !== "number" ||
+                typeof y !== "number" ||
+                typeof width !== "number"
+              ) {
+                return null;
               }
-              type="category"
-              stroke="#B4B2A9"
-              width={140}
-              tick={{ fontSize: 12 }}
-            />
-            <Tooltip
-              content={<CustomTooltip metric={metric} dataType={dataType} />}
-              cursor={{ fill: "rgba(255, 210, 0, 0.1)" }}
-            />
-            <Bar
-              dataKey={(entry) => getMetricValue(entry, metric, dataType)}
-              radius={[0, 6, 6, 0]}
-              label={(props) => {
-                const { x, y, width, value, index } = props;
-                const entry = sortedData[index];
-                if (!entry) return null;
 
-                const formattedValue = formatValue(value, metric, dataType);
+              const formattedValue = formatValue(value, metric, dataType);
 
-                return (
-                  <text
-                    x={x + width + 8}
-                    y={y + 12}
-                    fill="#FFD200"
-                    fontSize={12}
-                    fontWeight="bold"
-                    fontFamily="monospace"
-                    textAnchor="start"
-                    dominantBaseline="middle"
-                  >
-                    {formattedValue}
-                  </text>
-                );
-              }}
-              fill="#FFD200"
-            />
-          </BarChart>
-        </ResponsiveContainer>
+              return (
+                <text
+                  x={x + width + 8}
+                  y={y + 12}
+                  fill="#FFD200"
+                  fontSize={12}
+                  fontWeight="bold"
+                  fontFamily="monospace"
+                  textAnchor="start"
+                  dominantBaseline="middle"
+                >
+                  {formattedValue}
+                </text>
+              );
+            }}
+            fill="#FFD200"
+          />
+        </BarChart>
       </div>
     </div>
   );
