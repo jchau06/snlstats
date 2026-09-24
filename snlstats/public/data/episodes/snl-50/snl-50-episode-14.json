@@ -1,0 +1,129 @@
+{
+  "season": 50,
+  "episode": 14,
+  "airDate": "2025-03-08",
+  "host": "Lady Gaga",
+  "musicalGuest": "Lady Gaga",
+  "liveFromNewYork": ["James Austin Johnson", "Marcello Hernandez"],
+  "castPerformance": [
+    {
+      "name": "Colin Jost",
+      "screenTimeSeconds": 396,
+      "sketchCount": 1,
+      "powerRanking": 83.5,
+      "status": "present"
+    },
+    {
+      "name": "Bowen Yang",
+      "screenTimeSeconds": 556,
+      "sketchCount": 5,
+      "powerRanking": 116.8,
+      "status": "present"
+    },
+    {
+      "name": "Sarah Sherman",
+      "screenTimeSeconds": 424,
+      "sketchCount": 5,
+      "powerRanking": 82.5,
+      "status": "present"
+    },
+    {
+      "name": "Andrew Dismukes",
+      "screenTimeSeconds": 416,
+      "sketchCount": 4,
+      "powerRanking": 88.3,
+      "status": "present"
+    },
+    {
+      "name": "James Austin Johnson",
+      "screenTimeSeconds": 812,
+      "sketchCount": 4,
+      "powerRanking": 121.0,
+      "status": "present"
+    },
+    {
+      "name": "Ego Nwodim",
+      "screenTimeSeconds": 473,
+      "sketchCount": 6,
+      "powerRanking": 104.5,
+      "status": "present"
+    },
+    {
+      "name": "Heidi Gardner",
+      "screenTimeSeconds": 347,
+      "sketchCount": 4,
+      "powerRanking": 82.1,
+      "status": "present"
+    },
+    {
+      "name": "Mikey Day",
+      "screenTimeSeconds": 382,
+      "sketchCount": 3,
+      "powerRanking": 76.9,
+      "status": "present"
+    },
+    {
+      "name": "Marcello Hernandez",
+      "screenTimeSeconds": 614,
+      "sketchCount": 4,
+      "powerRanking": 146.3,
+      "status": "present"
+    },
+    {
+      "name": "Kenan Thompson",
+      "screenTimeSeconds": 396,
+      "sketchCount": 5,
+      "powerRanking": 96.8,
+      "status": "present"
+    },
+    {
+      "name": "Michael Che",
+      "screenTimeSeconds": 264,
+      "sketchCount": 1,
+      "powerRanking": 59.6,
+      "status": "present"
+    },
+    {
+      "name": "Chloe Fineman",
+      "screenTimeSeconds": 0,
+      "sketchCount": 4,
+      "powerRanking": 42.6,
+      "status": "present"
+    },
+    {
+      "name": "Michael Longfellow",
+      "screenTimeSeconds": 111,
+      "sketchCount": 2,
+      "powerRanking": 25.3,
+      "status": "present"
+    },
+    {
+      "name": "Ashley Padilla",
+      "screenTimeSeconds": 142,
+      "sketchCount": 4,
+      "powerRanking": 40.3,
+      "status": "present"
+    },
+    {
+      "name": "Emil Wakim",
+      "screenTimeSeconds": 73,
+      "sketchCount": 1,
+      "powerRanking": 10.7,
+      "status": "present"
+    },
+    {
+      "name": "Jane Wickline",
+      "screenTimeSeconds": 133,
+      "sketchCount": 4,
+      "powerRanking": 39.5,
+      "status": "present"
+    },
+    {
+      "name": "Devon Walker",
+      "screenTimeSeconds": 109,
+      "sketchCount": 2,
+      "powerRanking": 23.3,
+      "status": "present"
+    }
+  ]
+}
