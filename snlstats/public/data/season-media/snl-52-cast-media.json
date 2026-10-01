@@ -1,0 +1,91 @@
+{
+  "seasonNumber": 52,
+  "heroImageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/snl-52-cast-photo.jpg",
+  "seasonOpening": [
+    {
+      "castMemberName": "Michael Che",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/michael-che-opening.jpg"
+    },
+    {
+      "castMemberName": "Mikey Day",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/mikey-day-opening-jpg.jpg"
+    },
+    {
+      "castMemberName": "Andrew Dismukes",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/andrew-dismukes-opening.jpg"
+    },
+    {
+      "castMemberName": "Marcello Hernandez",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/marcello-hernandez-opening.png"
+    },
+    {
+      "castMemberName": "James Austin Johnson",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/james-austin-johnson-opening.jpg"
+    },
+    {
+      "castMemberName": "Colin Jost",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/colin-jost-opening.jpg"
+    },
+    {
+      "castMemberName": "Ashley Padilla",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/ashley-padilla-opening.png"
+    },
+    {
+      "castMemberName": "Sarah Sherman",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/sarah-sherman-opening.png"
+    },
+    {
+      "castMemberName": "Kenan Thompson",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/kenan-thompson-opening.png"
+    },
+    {
+      "castMemberName": "Jane Wickline",
+      "status": "repertory",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/jane-wickline-opening.png"
+    },
+    {
+      "castMemberName": "Saidah Belo-Osagie",
+      "status": "featured",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/saidah-belo-osagie-opening.png"
+    },
+    {
+      "castMemberName": "Tommy Brennan",
+      "status": "featured",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/tommy-brennan-opening.jpg"
+    },
+    {
+      "castMemberName": "Jeremy Culhane",
+      "status": "featured",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/jeremy-culhane-opening.jpg"
+    },
+    {
+      "castMemberName": "Ben Marshall",
+      "status": "featured",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/ben-marshall-opening.jpg"
+    },
+    {
+      "castMemberName": "Kam Patterson",
+      "status": "featured",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/kam-patterson-opening.jpg"
+    },
+    {
+      "castMemberName": "Grace Reiter",
+      "status": "featured",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/grace-reiter-opening.png"
+    },
+    {
+      "castMemberName": "Veronika Slowikowska",
+      "status": "featured",
+      "imageUrl": "https://wxvqsqaokhjefplzglgk.supabase.co/storage/v1/object/public/snlstats-images/snl-52-media/veronica-slowikowska-opening.jpg"
+    }
+  ]
+}

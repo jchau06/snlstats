@@ -40,22 +40,18 @@ async function loadEpisodeData(filePath: string) {
     );
 
     // Season dates
-    const seasonYears: Record<number, { start: number; end: number }> = {
-      51: { start: 2025, end: 2026 },
-      50: { start: 2024, end: 2025 },
-      49: { start: 2023, end: 2024 },
-    };
+    const yearStarted = 1974 + data.season;
+    const yearEnded = yearStarted + 1;
 
-    // Get or create the season
     const season = await prisma.season.upsert({
       where: { seasonNumber: data.season },
       create: {
         seasonNumber: data.season,
-        yearStarted: seasonYears[data.season]?.start ?? 2025,
-        yearEnded: seasonYears[data.season]?.end ?? 2026,
+        yearStarted,
+        yearEnded,
         numEpisodes: 16,
       },
-      update: {},
+      update: { yearStarted, yearEnded },
     });
 
     // Determine the latest season in the database.
@@ -67,8 +63,7 @@ async function loadEpisodeData(filePath: string) {
     });
 
     const isCurrentSeason =
-      latestSeason !== null &&
-      data.season === latestSeason.seasonNumber;
+      latestSeason !== null && data.season === latestSeason.seasonNumber;
 
     console.log(
       isCurrentSeason
@@ -77,9 +72,10 @@ async function loadEpisodeData(filePath: string) {
     );
 
     // Create episode slug
-    const episodeSlug = `snl-${data.season}-ep-${String(
-      data.episode,
-    ).padStart(2, "0")}-${slugify(data.host)}`;
+    const episodeSlug = `snl-${data.season}-ep-${String(data.episode).padStart(
+      2,
+      "0",
+    )}-${slugify(data.host)}`;
 
     // Ensure episode exists
     const episode = await prisma.episode.upsert({
@@ -227,10 +223,7 @@ async function loadEpisodeData(filePath: string) {
 }
 
 async function main() {
-  const episodesDir = path.join(
-    process.cwd(),
-    "public/data/episodes",
-  );
+  const episodesDir = path.join(process.cwd(), "public/data/episodes");
 
   const args = process.argv.slice(2);
 
