@@ -1,128 +1,128 @@
 {
   "season": 52,
-  "episode": 1,
-  "airDate": "2026-9-26",
-  "host": "Jalen Brunson",
-  "musicalGuest": "KATSEYE",
-  "liveFromNewYork": ["James Austin Johnson"],
+  "episode": 3,
+  "airDate": "2026-10-10",
+  "host": "Shane Gillis",
+  "musicalGuest": "Rosalía",
+  "liveFromNewYork": ["Colin Jost"],
   "castPerformance": [
     {
       "name": "Ashley Padilla",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 292,
+      "sketchCount": 3,
+      "powerRanking": 70.9,
       "status": "present"
     },
     {
       "name": "Colin Jost",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 555,
+      "sketchCount": 2,
+      "powerRanking": 115.5,
       "status": "present"
     },
     {
       "name": "Mikey Day",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 417,
+      "sketchCount": 6,
+      "powerRanking": 116.1,
       "status": "present"
     },
     {
       "name": "James Austin Johnson",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 493,
+      "sketchCount": 4,
+      "powerRanking": 129.3,
       "status": "present"
     },
     {
       "name": "Sarah Sherman",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 156,
+      "sketchCount": 4,
+      "powerRanking": 48.6,
       "status": "present"
     },
     {
       "name": "Marcello Hernandez",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 124,
+      "sketchCount": 4,
+      "powerRanking": 44.1,
       "status": "present"
     },
     {
       "name": "Kenan Thompson",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 110,
+      "sketchCount": 4,
+      "powerRanking": 40.7,
       "status": "present"
     },
     {
       "name": "Andrew Dismukes",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 341,
+      "sketchCount": 3,
+      "powerRanking": 88.4,
       "status": "present"
     },
     {
       "name": "Michael Che",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 208,
+      "sketchCount": 1,
+      "powerRanking": 43.7,
       "status": "present"
     },
     {
       "name": "Jane Wickline",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 101,
+      "sketchCount": 1,
+      "powerRanking": 17.2,
       "status": "present"
     },
     {
       "name": "Veronika Slowikowska",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 81,
+      "sketchCount": 2,
+      "powerRanking": 28.5,
       "status": "present"
     },
     {
       "name": "Jeremy Culhane",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 194,
+      "sketchCount": 3,
+      "powerRanking": 47.6,
       "status": "present"
     },
     {
       "name": "Ben Marshall",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 268,
+      "sketchCount": 5,
+      "powerRanking": 68.7,
       "status": "present"
     },
     {
       "name": "Tommy Brennan",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 261,
+      "sketchCount": 4,
+      "powerRanking": 64.2,
       "status": "present"
     },
     {
       "name": "Kam Patterson",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 43,
+      "sketchCount": 3,
+      "powerRanking": 25.3,
       "status": "present"
     },
     {
       "name": "Grace Reiter",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 497,
+      "sketchCount": 4,
+      "powerRanking": 103.4,
       "status": "present"
     },
     {
       "name": "Saidah Belo-Osagie",
-      "screenTimeSeconds": 0,
-      "sketchCount": 0,
-      "powerRanking": 0,
+      "screenTimeSeconds": 16,
+      "sketchCount": 2,
+      "powerRanking": 8.8,
       "status": "present"
     }
   ]
