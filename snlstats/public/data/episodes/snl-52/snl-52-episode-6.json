@@ -1,0 +1,129 @@
+{
+  "season": 52,
+  "episode": 1,
+  "airDate": "2026-9-26",
+  "host": "Jalen Brunson",
+  "musicalGuest": "KATSEYE",
+  "liveFromNewYork": ["James Austin Johnson"],
+  "castPerformance": [
+    {
+      "name": "Ashley Padilla",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    },
+    {
+      "name": "Colin Jost",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    },
+    {
+      "name": "Mikey Day",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    },
+    {
+      "name": "James Austin Johnson",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    },
+    {
+      "name": "Sarah Sherman",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    },
+    {
+      "name": "Marcello Hernandez",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    },
+    {
+      "name": "Kenan Thompson",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    },
+    {
+      "name": "Andrew Dismukes",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    },
+    {
+      "name": "Michael Che",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    },
+    {
+      "name": "Jane Wickline",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    },
+    {
+      "name": "Veronika Slowikowska",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    },
+    {
+      "name": "Jeremy Culhane",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    },
+    {
+      "name": "Ben Marshall",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    },
+    {
+      "name": "Tommy Brennan",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    },
+    {
+      "name": "Kam Patterson",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    },
+    {
+      "name": "Grace Reiter",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    },
+    {
+      "name": "Saidah Belo-Osagie",
+      "screenTimeSeconds": 0,
+      "sketchCount": 0,
+      "powerRanking": 0,
+      "status": "present"
+    }
+  ]
+}
